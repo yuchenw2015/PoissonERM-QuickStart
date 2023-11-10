@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Control Script for Modeling: user-input.r | Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression</title>
+  <meta name="description" content="Chapter 5 Control Script for Modeling: user-input.r | Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression" />
+  <meta name="generator" content="bookdown 0.36 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 Control Script for Modeling: user-input.r | Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 Control Script for Modeling: user-input.r | Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression" />
+  
+  
+  
+
+<meta name="author" content="Yuchen Wang, Ph.D., Pfizer Inc" />
+<meta name="author" content="Luke Fostvedt, Ph.D., Pfizer Inc" />
+
+
+<meta name="date" content="2023-11-10" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="data-preparation.html"/>
+<link rel="next" href="prediction-control-script-prediction-user-input-sim.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Package-like Tool: PoissonERM</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="quick-start-with-an-example.html"><a href="quick-start-with-an-example.html"><i class="fa fa-check"></i><b>2</b> Quick Start with an Example</a></li>
+<li class="chapter" data-level="3" data-path="usage.html"><a href="usage.html"><i class="fa fa-check"></i><b>3</b> Usage</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="usage.html"><a href="usage.html#statistical-analysis-modelpoisson"><i class="fa fa-check"></i><b>3.1</b> Statistical Analysis: <code>ModelPoisson()</code></a></li>
+<li class="chapter" data-level="3.2" data-path="usage.html"><a href="usage.html#new-predictions-predictionpoisson"><i class="fa fa-check"></i><b>3.2</b> New Predictions <code>PredictionPoisson()</code></a></li>
+<li class="chapter" data-level="3.3" data-path="usage.html"><a href="usage.html#report-generation-reportpoisson"><i class="fa fa-check"></i><b>3.3</b> Report Generation: <code>ReportPoisson()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="data-preparation.html"><a href="data-preparation.html"><i class="fa fa-check"></i><b>4</b> Data Preparation</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="data-preparation.html"><a href="data-preparation.html#data-set-for-modeling"><i class="fa fa-check"></i><b>4.1</b> Data Set for Modeling</a></li>
+<li class="chapter" data-level="4.2" data-path="data-preparation.html"><a href="data-preparation.html#new-exposure-data-set-for-prediction"><i class="fa fa-check"></i><b>4.2</b> New Exposure Data Set for Prediction</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html"><i class="fa fa-check"></i><b>5</b> Control Script for Modeling: <code>user-input.r</code></a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#data-set"><i class="fa fa-check"></i><b>5.1</b> Data set</a></li>
+<li class="chapter" data-level="5.2" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#unique-patient-identifier"><i class="fa fa-check"></i><b>5.2</b> Unique Patient Identifier</a></li>
+<li class="chapter" data-level="5.3" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#time"><i class="fa fa-check"></i><b>5.3</b> Time</a></li>
+<li class="chapter" data-level="5.4" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#endpoints-to-be-analysed"><i class="fa fa-check"></i><b>5.4</b> Endpoints to be analysed</a></li>
+<li class="chapter" data-level="5.5" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#event-sub-type-column-and-set-up-optional."><i class="fa fa-check"></i><b>5.5</b> Event Sub-Type Column and Set up (optional).</a></li>
+<li class="chapter" data-level="5.6" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#grade-column-and-set-up-optional."><i class="fa fa-check"></i><b>5.6</b> Grade column and Set up (optional).</a></li>
+<li class="chapter" data-level="5.7" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#exposure-metrics"><i class="fa fa-check"></i><b>5.7</b> Exposure Metrics</a></li>
+<li class="chapter" data-level="5.8" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#categorical-covariates"><i class="fa fa-check"></i><b>5.8</b> Categorical Covariates</a></li>
+<li class="chapter" data-level="5.9" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#continuous-covariates"><i class="fa fa-check"></i><b>5.9</b> Continuous Covariates</a></li>
+<li class="chapter" data-level="5.10" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#reference-value-for-continuous-covariates"><i class="fa fa-check"></i><b>5.10</b> Reference Value for Continuous Covariates</a></li>
+<li class="chapter" data-level="5.11" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#other-options"><i class="fa fa-check"></i><b>5.11</b> Other Options</a>
+<ul>
+<li class="chapter" data-level="5.11.1" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#demographic-summary-by-variable"><i class="fa fa-check"></i><b>5.11.1</b> Demographic Summary-by Variable</a></li>
+<li class="chapter" data-level="5.11.2" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#additional-columns-to-include-in-modeling-dataset"><i class="fa fa-check"></i><b>5.11.2</b> Additional Columns to Include In Modeling Dataset</a></li>
+<li class="chapter" data-level="5.11.3" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#threshold-for-incidence-rate"><i class="fa fa-check"></i><b>5.11.3</b> Threshold(%) for Incidence Rate</a></li>
+<li class="chapter" data-level="5.11.4" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#exposure-metric-selection-criteria"><i class="fa fa-check"></i><b>5.11.4</b> Exposure Metric Selection Criteria</a></li>
+<li class="chapter" data-level="5.11.5" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#covariates-search"><i class="fa fa-check"></i><b>5.11.5</b> Covariates Search</a></li>
+<li class="chapter" data-level="5.11.6" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#backwards-deletion-criteria"><i class="fa fa-check"></i><b>5.11.6</b> Backwards Deletion Criteria</a></li>
+<li class="chapter" data-level="5.11.7" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#exposure-metrics-and-continuous-covariates-scales"><i class="fa fa-check"></i><b>5.11.7</b> Exposure Metrics and Continuous Covariates Scales</a></li>
+<li class="chapter" data-level="5.11.8" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#odds-ratio-results"><i class="fa fa-check"></i><b>5.11.8</b> Odds-Ratio Results</a></li>
+<li class="chapter" data-level="5.11.9" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#saved-table-format"><i class="fa fa-check"></i><b>5.11.9</b> Saved table format</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html"><i class="fa fa-check"></i><b>6</b> Prediction Control Script <code>prediction-user-input-sim.r</code></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#bins-of-observed-exposure-values"><i class="fa fa-check"></i><b>6.1</b> Bins of Observed Exposure Values</a></li>
+<li class="chapter" data-level="6.2" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#simulated-exposure-data-set"><i class="fa fa-check"></i><b>6.2</b> Simulated Exposure Data Set</a></li>
+<li class="chapter" data-level="6.3" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#new-exposure-summary-metric"><i class="fa fa-check"></i><b>6.3</b> New Exposure Summary Metric</a></li>
+<li class="chapter" data-level="6.4" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#group-label-variable"><i class="fa fa-check"></i><b>6.4</b> Group Label Variable</a></li>
+<li class="chapter" data-level="6.5" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#filter-condition-optional"><i class="fa fa-check"></i><b>6.5</b> Filter Condition (Optional)</a></li>
+<li class="chapter" data-level="6.6" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#caption-for-simulated-exposure-data"><i class="fa fa-check"></i><b>6.6</b> Caption for Simulated Exposure Data</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html"><i class="fa fa-check"></i><b>7</b> Example Adjusting Output</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#demographic-summary-tables"><i class="fa fa-check"></i><b>7.1</b> Demographic Summary Tables</a></li>
+<li class="chapter" data-level="7.2" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#use-different-exposure-metrics-in-different-endpoints"><i class="fa fa-check"></i><b>7.2</b> Use different Exposure Metrics in different Endpoints</a></li>
+<li class="chapter" data-level="7.3" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#threshold-for-incidence-rate-1"><i class="fa fa-check"></i><b>7.3</b> Threshold(%) for Incidence Rate</a></li>
+<li class="chapter" data-level="7.4" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#exposure-and-model-selection-criteria"><i class="fa fa-check"></i><b>7.4</b> Exposure and Model Selection Criteria</a></li>
+<li class="chapter" data-level="7.5" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#scale-of-exposure-metrics"><i class="fa fa-check"></i><b>7.5</b> Scale of Exposure Metrics</a></li>
+<li class="chapter" data-level="7.6" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#covariates-search-1"><i class="fa fa-check"></i><b>7.6</b> Covariates Search</a></li>
+<li class="chapter" data-level="7.7" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#summary-only-covariates"><i class="fa fa-check"></i><b>7.7</b> Summary-only Covariates</a></li>
+<li class="chapter" data-level="7.8" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#reference-value-for-continuous-covariates-1"><i class="fa fa-check"></i><b>7.8</b> Reference value for Continuous Covariates</a></li>
+<li class="chapter" data-level="7.9" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#save-all-tables-as-.tsv-files-instead-of-.tex-files"><i class="fa fa-check"></i><b>7.9</b> Save all tables as .tsv files instead of .tex files</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="acknowledgements.html"><a href="acknowledgements.html"><i class="fa fa-check"></i><b>8</b> Acknowledgements</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="control-script-for-modeling-user-input.r" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">Chapter 5</span> Control Script for Modeling: <code>user-input.r</code><a href="control-script-for-modeling-user-input.html#control-script-for-modeling-user-input.r" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>There are many modeling options that are specified in the control scripts to see how modeling result may change. The options will all be presented in the context of the example dataset as that is considered to be the easiest way to present all the options in a clear manner.</p>
+<p>The example analysis has the following components which are specified in the <code>user-input.r</code> control file.</p>
+<ul>
+<li>2 Exposure Metrics, 3 Categorical Covariates and 2 Continuous Covariates were considered in all 3 Endpoints;</li>
+<li>All exposures, covariates and events were summarized by protocol number (“PROT”).</li>
+<li>Threshold of low incidence rate was 10% therefore only 2 endpoints were considered in this analysis (Adverse Event 1 was with incidence rate lower than 10%).</li>
+<li>Event sub-type was provided for all endpoints, which breaks down the “observed with event” and “not observed with event” outcomes into more detailed classification.</li>
+<li>Included covariates in final model if there is any proper one(s).</li>
+<li>Considered log- and sqrt-transformation for exposure metrics.</li>
+<li>Considered log-transformation for continuous covariates.</li>
+<li>No reference value for continuous covariates.</li>
+<li>Exposure selection conducted following <span class="math inline">\(p\)</span>-value significance criteria, and backwards deletion did not remove exposure metric regardless of significance. Final model may not contain exposure metric if none meet the exposure selection criteria.</li>
+<li>Tables are all saved as .tex (LaTex format).</li>
+</ul>
+<p>This section explains how to write a user-input.r control file for modeling. The examples showing below can be used as a template by combining all chunks in order(user needs to update the column names and options accordingly).</p>
+<p>The control script require package <code>tidyverse</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="control-script-for-modeling-user-input.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<div id="data-set" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Data set<a href="control-script-for-modeling-user-input.html#data-set" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><code>input.data.name</code> is the data file for modeling. This data file must be under the directory of <code>pathRunType</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="control-script-for-modeling-user-input.html#cb8-1" aria-hidden="true" tabindex="-1"></a>input.data.name <span class="ot">&lt;-</span> <span class="st">&quot;obsdata.csv&quot;</span> </span></code></pre></div>
+</div>
+<div id="unique-patient-identifier" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Unique Patient Identifier<a href="control-script-for-modeling-user-input.html#unique-patient-identifier" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><code>pat.num</code> is the column name of the subject ID variable.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="control-script-for-modeling-user-input.html#cb9-1" aria-hidden="true" tabindex="-1"></a>pat.num <span class="ot">&lt;-</span> <span class="st">&quot;ID&quot;</span> <span class="co">#ID is the column name in data set</span></span></code></pre></div>
+</div>
+<div id="time" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> Time<a href="control-script-for-modeling-user-input.html#time" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><code>EVDUR</code> and <code>EVDUR.unit</code> are the time column name in the data set and the time unit. The time values must be in days.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="control-script-for-modeling-user-input.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Column for time in days</span></span>
+<span id="cb10-2"><a href="control-script-for-modeling-user-input.html#cb10-2" aria-hidden="true" tabindex="-1"></a>EVDUR <span class="ot">&lt;-</span> <span class="st">&quot;TIME&quot;</span></span>
+<span id="cb10-3"><a href="control-script-for-modeling-user-input.html#cb10-3" aria-hidden="true" tabindex="-1"></a>EVDUR.unit <span class="ot">&lt;-</span> <span class="st">&quot;days&quot;</span></span></code></pre></div>
+</div>
+<div id="endpoints-to-be-analysed" class="section level2 hasAnchor" number="5.4">
+<h2><span class="header-section-number">5.4</span> Endpoints to be analysed<a href="control-script-for-modeling-user-input.html#endpoints-to-be-analysed" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This section introduces the complex set up regarding the endpoints.</p>
+<ul>
+<li>Outcome column and levels&amp;labels:</li>
+</ul>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="control-script-for-modeling-user-input.html#cb11-1" aria-hidden="true" tabindex="-1"></a>dv <span class="ot">&lt;-</span> <span class="st">&quot;DV&quot;</span> <span class="co">#DV is the outcome column name in data set</span></span>
+<span id="cb11-2"><a href="control-script-for-modeling-user-input.html#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Levels as they appear in the dataset</span></span>
+<span id="cb11-3"><a href="control-script-for-modeling-user-input.html#cb11-3" aria-hidden="true" tabindex="-1"></a>dv.levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb11-4"><a href="control-script-for-modeling-user-input.html#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Labels you&#39;d like to see in the report</span></span>
+<span id="cb11-5"><a href="control-script-for-modeling-user-input.html#cb11-5" aria-hidden="true" tabindex="-1"></a>dv.labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>)</span></code></pre></div>
+<ul>
+<li>Event Type (Endpoint flag) column</li>
+</ul>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="control-script-for-modeling-user-input.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Column describing endpoints</span></span>
+<span id="cb12-2"><a href="control-script-for-modeling-user-input.html#cb12-2" aria-hidden="true" tabindex="-1"></a>endpcolName <span class="ot">&lt;-</span> <span class="st">&quot;FLAG&quot;</span> <span class="co">#FLAG is the flag column name in data set</span></span>
+<span id="cb12-3"><a href="control-script-for-modeling-user-input.html#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset of endpoints in analysis dataset to be analyzed</span></span>
+<span id="cb12-4"><a href="control-script-for-modeling-user-input.html#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Can be numbers or character strings, however they show up in the dataset</span></span>
+<span id="cb12-5"><a href="control-script-for-modeling-user-input.html#cb12-5" aria-hidden="true" tabindex="-1"></a>endpoints <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>) <span class="co">#the actual values in FLAG to be used in this analysis</span></span>
+<span id="cb12-6"><a href="control-script-for-modeling-user-input.html#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#endpoints &lt;- c(1,3) #FLAG=2 will be ignored in this analysis</span></span></code></pre></div>
+<ul>
+<li>Event Names set up. Provide the name of each endpoint.</li>
+</ul>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="control-script-for-modeling-user-input.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ENDPOINTS names.</span></span>
+<span id="cb13-2"><a href="control-script-for-modeling-user-input.html#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Names for endpoints as they should appear in tables and figures.</span></span>
+<span id="cb13-3"><a href="control-script-for-modeling-user-input.html#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Should be the same length as the &quot;endpoints&quot; vector above.</span></span>
+<span id="cb13-4"><a href="control-script-for-modeling-user-input.html#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Any endpoint name cannot be a sub-string of the other one</span></span>
+<span id="cb13-5"><a href="control-script-for-modeling-user-input.html#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Bad example</span></span>
+<span id="cb13-6"><a href="control-script-for-modeling-user-input.html#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#endpName &lt;- c(&quot;Adverse&quot;,</span></span>
+<span id="cb13-7"><a href="control-script-for-modeling-user-input.html#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#              &quot;Adverse Event&quot;,</span></span>
+<span id="cb13-8"><a href="control-script-for-modeling-user-input.html#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#              &quot;Adverse Event Type&quot;)</span></span>
+<span id="cb13-9"><a href="control-script-for-modeling-user-input.html#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="control-script-for-modeling-user-input.html#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co"># EXAMPLE:</span></span>
+<span id="cb13-11"><a href="control-script-for-modeling-user-input.html#cb13-11" aria-hidden="true" tabindex="-1"></a>endpName <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Adverse Event Type 1&quot;</span>,</span>
+<span id="cb13-12"><a href="control-script-for-modeling-user-input.html#cb13-12" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;Adverse Event Type 2&quot;</span>,</span>
+<span id="cb13-13"><a href="control-script-for-modeling-user-input.html#cb13-13" aria-hidden="true" tabindex="-1"></a>              <span class="st">&quot;Adverse Event Type 3&quot;</span>)</span>
+<span id="cb13-14"><a href="control-script-for-modeling-user-input.html#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="control-script-for-modeling-user-input.html#cb13-15" aria-hidden="true" tabindex="-1"></a>endpName <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="at">X =</span> endpName, <span class="at">simplify =</span> F, <span class="at">USE.NAMES =</span> T, <span class="at">FUN =</span> <span class="cf">function</span>(n){</span>
+<span id="cb13-16"><a href="control-script-for-modeling-user-input.html#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(n <span class="sc">==</span> <span class="st">&quot;Adverse Event Type 1&quot;</span>){</span>
+<span id="cb13-17"><a href="control-script-for-modeling-user-input.html#cb13-17" aria-hidden="true" tabindex="-1"></a>    numb <span class="ot">&lt;-</span> endpoints[<span class="dv">1</span>] <span class="co">#FLAG = 1 (endpoints[1]) is &quot;Adverse Event Type 1&quot;</span></span>
+<span id="cb13-18"><a href="control-script-for-modeling-user-input.html#cb13-18" aria-hidden="true" tabindex="-1"></a>    label <span class="ot">&lt;-</span> n</span>
+<span id="cb13-19"><a href="control-script-for-modeling-user-input.html#cb13-19" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(n <span class="sc">==</span> <span class="st">&quot;Adverse Event Type 2&quot;</span>){</span>
+<span id="cb13-20"><a href="control-script-for-modeling-user-input.html#cb13-20" aria-hidden="true" tabindex="-1"></a>    numb <span class="ot">&lt;-</span> endpoints[<span class="dv">2</span>] <span class="co">#FLAG = 2 (endpoints[2]) is &quot;Adverse Event Type 2&quot;</span></span>
+<span id="cb13-21"><a href="control-script-for-modeling-user-input.html#cb13-21" aria-hidden="true" tabindex="-1"></a>    label <span class="ot">&lt;-</span> n</span>
+<span id="cb13-22"><a href="control-script-for-modeling-user-input.html#cb13-22" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(n <span class="sc">==</span> <span class="st">&quot;Adverse Event Type 3&quot;</span>){</span>
+<span id="cb13-23"><a href="control-script-for-modeling-user-input.html#cb13-23" aria-hidden="true" tabindex="-1"></a>    numb <span class="ot">&lt;-</span> endpoints[<span class="dv">3</span>] <span class="co">#FLAG = 3 (endpoints[3]) is &quot;Adverse Event Type 3&quot;</span></span>
+<span id="cb13-24"><a href="control-script-for-modeling-user-input.html#cb13-24" aria-hidden="true" tabindex="-1"></a>    label <span class="ot">&lt;-</span> n</span>
+<span id="cb13-25"><a href="control-script-for-modeling-user-input.html#cb13-25" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb13-26"><a href="control-script-for-modeling-user-input.html#cb13-26" aria-hidden="true" tabindex="-1"></a>    numb <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb13-27"><a href="control-script-for-modeling-user-input.html#cb13-27" aria-hidden="true" tabindex="-1"></a>    label <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb13-28"><a href="control-script-for-modeling-user-input.html#cb13-28" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb13-29"><a href="control-script-for-modeling-user-input.html#cb13-29" aria-hidden="true" tabindex="-1"></a>  endp.list <span class="ot">&lt;-</span> <span class="fu">c</span>(numb, label)</span>
+<span id="cb13-30"><a href="control-script-for-modeling-user-input.html#cb13-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(endp.list)</span>
+<span id="cb13-31"><a href="control-script-for-modeling-user-input.html#cb13-31" aria-hidden="true" tabindex="-1"></a> } <span class="co"># function(n)</span></span>
+<span id="cb13-32"><a href="control-script-for-modeling-user-input.html#cb13-32" aria-hidden="true" tabindex="-1"></a>) <span class="co"># sapply</span></span></code></pre></div>
+</div>
+<div id="event-sub-type-column-and-set-up-optional." class="section level2 hasAnchor" number="5.5">
+<h2><span class="header-section-number">5.5</span> Event Sub-Type Column and Set up (optional).<a href="control-script-for-modeling-user-input.html#event-sub-type-column-and-set-up-optional." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This section introduces the set up for event sub-type information.</p>
+<p><code>sub.endpcolName</code> is the column name of the sub-type information, and <code>sub.endpName</code> connects the sub-type values to the endpoints names with proper sub-type names.</p>
+<p>In the example obsdata.csv, the values in column “SUB” we’re all in numbers, and they refer to different sub-type names for different endpoint types.</p>
+<p><code>sub.endpcolName</code> and <code>sub.endpName</code> could be missing.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="control-script-for-modeling-user-input.html#cb14-1" aria-hidden="true" tabindex="-1"></a>sub.endpcolName <span class="ot">&lt;-</span> <span class="st">&quot;SUB&quot;</span> <span class="co">#SUB is the column name in the data set</span></span>
+<span id="cb14-2"><a href="control-script-for-modeling-user-input.html#cb14-2" aria-hidden="true" tabindex="-1"></a>sub.endpName <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">`</span><span class="at">Adverse Event Type 1</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">`</span><span class="at">Severe</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">1</span>, </span>
+<span id="cb14-3"><a href="control-script-for-modeling-user-input.html#cb14-3" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">`</span><span class="at">Mild</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">2</span>,</span>
+<span id="cb14-4"><a href="control-script-for-modeling-user-input.html#cb14-4" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">`</span><span class="at">None</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">3</span>),</span>
+<span id="cb14-5"><a href="control-script-for-modeling-user-input.html#cb14-5" aria-hidden="true" tabindex="-1"></a>                     <span class="co">#Endpoint name = c(Actual sub-category name = Value in the column)</span></span>
+<span id="cb14-6"><a href="control-script-for-modeling-user-input.html#cb14-6" aria-hidden="true" tabindex="-1"></a>                     <span class="st">`</span><span class="at">Adverse Event Type 2</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">`</span><span class="at">SubType 1</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb14-7"><a href="control-script-for-modeling-user-input.html#cb14-7" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">`</span><span class="at">SubType 2</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">2</span>,</span>
+<span id="cb14-8"><a href="control-script-for-modeling-user-input.html#cb14-8" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">`</span><span class="at">SubType 3</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">3</span>,</span>
+<span id="cb14-9"><a href="control-script-for-modeling-user-input.html#cb14-9" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">`</span><span class="at">SubType 4</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">4</span>,</span>
+<span id="cb14-10"><a href="control-script-for-modeling-user-input.html#cb14-10" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">`</span><span class="at">SubType 5</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">5</span>,</span>
+<span id="cb14-11"><a href="control-script-for-modeling-user-input.html#cb14-11" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">`</span><span class="at">SubType 6</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">6</span>),</span>
+<span id="cb14-12"><a href="control-script-for-modeling-user-input.html#cb14-12" aria-hidden="true" tabindex="-1"></a>                     <span class="st">`</span><span class="at">Adverse Event Type 3</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">`</span><span class="at">Severe</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb14-13"><a href="control-script-for-modeling-user-input.html#cb14-13" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">`</span><span class="at">Moderate</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">2</span>,</span>
+<span id="cb14-14"><a href="control-script-for-modeling-user-input.html#cb14-14" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">`</span><span class="at">Mild</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">3</span>,</span>
+<span id="cb14-15"><a href="control-script-for-modeling-user-input.html#cb14-15" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">`</span><span class="at">None</span><span class="st">`</span> <span class="ot">=</span> <span class="dv">4</span>))</span></code></pre></div>
+</div>
+<div id="grade-column-and-set-up-optional." class="section level2 hasAnchor" number="5.6">
+<h2><span class="header-section-number">5.6</span> Grade column and Set up (optional).<a href="control-script-for-modeling-user-input.html#grade-column-and-set-up-optional." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>If the endpoints are grade related, provide the grade column name as <code>dvg</code> and a summary of grades within each endpoint will be generated.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="control-script-for-modeling-user-input.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#The same column cannot be set as dvg and sub.endpcolName at the same time</span></span>
+<span id="cb15-2"><a href="control-script-for-modeling-user-input.html#cb15-2" aria-hidden="true" tabindex="-1"></a>dvg <span class="ot">&lt;-</span> <span class="st">&quot;SUB&quot;</span> <span class="co">#SUB is the column name in the data set</span></span></code></pre></div>
+<p><code>dvg</code> could be missing.</p>
+<p>Usually,<code>dvg</code> and <code>sub.endpcolName</code> are not both used in the same analysis.</p>
+</div>
+<div id="exposure-metrics" class="section level2 hasAnchor" number="5.7">
+<h2><span class="header-section-number">5.7</span> Exposure Metrics<a href="control-script-for-modeling-user-input.html#exposure-metrics" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This section is about the exposure metric information. Beside of the column names <code>orig.exposureCov</code>, user needs to provide the names of each exposure metric to show on table/figure or in the report context, as well as the endpoint(s) to use each exposure with.</p>
+<ul>
+<li>Provide Exposure Metric Columns</li>
+</ul>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="control-script-for-modeling-user-input.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># EXPOSURE covariates - list</span></span>
+<span id="cb16-2"><a href="control-script-for-modeling-user-input.html#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Names should correspond to names in analysis dataset.</span></span>
+<span id="cb16-3"><a href="control-script-for-modeling-user-input.html#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># EXAMPLE:</span></span>
+<span id="cb16-4"><a href="control-script-for-modeling-user-input.html#cb16-4" aria-hidden="true" tabindex="-1"></a>orig.exposureCov <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;CAVE1&quot;</span>,<span class="st">&quot;CAVE2&quot;</span>) <span class="co">#exposure metric column names in data</span></span></code></pre></div>
+<ul>
+<li>Set up Exposure Metrics</li>
+</ul>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="control-script-for-modeling-user-input.html#cb17-1" aria-hidden="true" tabindex="-1"></a>desc.exposureCov<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="at">X =</span> orig.exposureCov, <span class="at">simplify =</span> F, <span class="at">USE.NAMES =</span> T, <span class="at">FUN =</span> <span class="cf">function</span>(f){</span>
+<span id="cb17-2"><a href="control-script-for-modeling-user-input.html#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(f <span class="sc">==</span> <span class="st">&quot;CAVE1&quot;</span>){ </span>
+<span id="cb17-3"><a href="control-script-for-modeling-user-input.html#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">#name to show in tables or figures</span></span>
+<span id="cb17-4"><a href="control-script-for-modeling-user-input.html#cb17-4" aria-hidden="true" tabindex="-1"></a>    title <span class="ot">=</span> <span class="st">&quot;C[ave1]~(ng/mL)&quot;</span> <span class="co">#use ~ for white space; use [x] for subscript text</span></span>
+<span id="cb17-5"><a href="control-script-for-modeling-user-input.html#cb17-5" aria-hidden="true" tabindex="-1"></a>    label <span class="ot">=</span> <span class="st">&quot;Time-weighted average concentration A&quot;</span> <span class="co">#Name to show in report context</span></span>
+<span id="cb17-6"><a href="control-script-for-modeling-user-input.html#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">#end.p = c(endpoints[1]) #will be used in the first endpoint</span></span>
+<span id="cb17-7"><a href="control-script-for-modeling-user-input.html#cb17-7" aria-hidden="true" tabindex="-1"></a>    end.p <span class="ot">=</span> <span class="fu">c</span>(endpoints[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]) <span class="co">#will be used in all 3 endpoints</span></span>
+<span id="cb17-8"><a href="control-script-for-modeling-user-input.html#cb17-8" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(f <span class="sc">==</span> <span class="st">&quot;CAVE2&quot;</span>){</span>
+<span id="cb17-9"><a href="control-script-for-modeling-user-input.html#cb17-9" aria-hidden="true" tabindex="-1"></a>    title <span class="ot">=</span> <span class="st">&quot;C[ave2]~(ng/mL)&quot;</span></span>
+<span id="cb17-10"><a href="control-script-for-modeling-user-input.html#cb17-10" aria-hidden="true" tabindex="-1"></a>    label <span class="ot">=</span> <span class="st">&quot;Time-weighted average concentration B&quot;</span></span>
+<span id="cb17-11"><a href="control-script-for-modeling-user-input.html#cb17-11" aria-hidden="true" tabindex="-1"></a>    end.p <span class="ot">=</span> <span class="fu">c</span>(endpoints[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span>
+<span id="cb17-12"><a href="control-script-for-modeling-user-input.html#cb17-12" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb17-13"><a href="control-script-for-modeling-user-input.html#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="control-script-for-modeling-user-input.html#cb17-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb17-15"><a href="control-script-for-modeling-user-input.html#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">title =</span> title, <span class="at">label =</span> label, <span class="at">end.p =</span> end.p)</span>
+<span id="cb17-16"><a href="control-script-for-modeling-user-input.html#cb17-16" aria-hidden="true" tabindex="-1"></a> } <span class="co"># function(f)</span></span>
+<span id="cb17-17"><a href="control-script-for-modeling-user-input.html#cb17-17" aria-hidden="true" tabindex="-1"></a>) <span class="co"># sapply</span></span></code></pre></div>
+</div>
+<div id="categorical-covariates" class="section level2 hasAnchor" number="5.8">
+<h2><span class="header-section-number">5.8</span> Categorical Covariates<a href="control-script-for-modeling-user-input.html#categorical-covariates" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The set up for categorical covariates is very similar to exposure metrics. Categorical covariates will have the same name on table/figure and in the report context.</p>
+<p>Categorical covariates can be provided as a summary-only variable, which will only show in the demographic summary and will be excluded in modeling covariates search.</p>
+<ul>
+<li>Categorical Covariates Column Names</li>
+</ul>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="control-script-for-modeling-user-input.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CATEGORICAL covariates - list</span></span>
+<span id="cb18-2"><a href="control-script-for-modeling-user-input.html#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Names should correspond to names in analysis dataset.</span></span>
+<span id="cb18-3"><a href="control-script-for-modeling-user-input.html#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># EXAMPLE:</span></span>
+<span id="cb18-4"><a href="control-script-for-modeling-user-input.html#cb18-4" aria-hidden="true" tabindex="-1"></a>full.cat <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;RACE&quot;</span>,<span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;LOCATION&quot;</span>)</span></code></pre></div>
+<ul>
+<li>Set Up Categorical Covariates</li>
+</ul>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="control-script-for-modeling-user-input.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign more elaborate names and factor levels to categorical covs</span></span>
+<span id="cb19-2"><a href="control-script-for-modeling-user-input.html#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: Assign the desired reference value as the first element of &quot;levels&quot;</span></span>
+<span id="cb19-3"><a href="control-script-for-modeling-user-input.html#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># EXAMPLE:</span></span>
+<span id="cb19-4"><a href="control-script-for-modeling-user-input.html#cb19-4" aria-hidden="true" tabindex="-1"></a> full.cat<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="at">X =</span> full.cat, <span class="at">simplify =</span> F, <span class="at">USE.NAMES =</span> T, <span class="at">FUN =</span> <span class="cf">function</span>(j){</span>
+<span id="cb19-5"><a href="control-script-for-modeling-user-input.html#cb19-5" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span>(j <span class="sc">==</span> <span class="st">&quot;RACE&quot;</span>){</span>
+<span id="cb19-6"><a href="control-script-for-modeling-user-input.html#cb19-6" aria-hidden="true" tabindex="-1"></a>     <span class="co">#categorical values are coded as numbers 1,2,3,4 in data set</span></span>
+<span id="cb19-7"><a href="control-script-for-modeling-user-input.html#cb19-7" aria-hidden="true" tabindex="-1"></a>     <span class="co">#the levels vector is corresponding to the order of numerical levels in the data set</span></span>
+<span id="cb19-8"><a href="control-script-for-modeling-user-input.html#cb19-8" aria-hidden="true" tabindex="-1"></a>     levels <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;White&quot;</span>, <span class="st">&quot;Black&quot;</span>, <span class="st">&quot;Asian&quot;</span>, <span class="st">&quot;Other&quot;</span>) <span class="co">#1=&quot;White&quot;, 2=&quot;Black&quot;, ...</span></span>
+<span id="cb19-9"><a href="control-script-for-modeling-user-input.html#cb19-9" aria-hidden="true" tabindex="-1"></a>     label <span class="ot">=</span> <span class="st">&quot;Race&quot;</span> <span class="co">#Name of the variable to show in report</span></span>
+<span id="cb19-10"><a href="control-script-for-modeling-user-input.html#cb19-10" aria-hidden="true" tabindex="-1"></a>     <span class="co">#end.p = c(endpoints[1]) #use for the first endpoint</span></span>
+<span id="cb19-11"><a href="control-script-for-modeling-user-input.html#cb19-11" aria-hidden="true" tabindex="-1"></a>     <span class="co">#end.p = &quot;summary only&quot; #use for demographic summary only, won&#39;t be included in modeling</span></span>
+<span id="cb19-12"><a href="control-script-for-modeling-user-input.html#cb19-12" aria-hidden="true" tabindex="-1"></a>     end.p <span class="ot">=</span> <span class="fu">c</span>(endpoints[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]) <span class="co">#use for all endpoints</span></span>
+<span id="cb19-13"><a href="control-script-for-modeling-user-input.html#cb19-13" aria-hidden="true" tabindex="-1"></a>   }<span class="cf">else</span> <span class="cf">if</span>(j <span class="sc">==</span> <span class="st">&quot;SEX&quot;</span>){</span>
+<span id="cb19-14"><a href="control-script-for-modeling-user-input.html#cb19-14" aria-hidden="true" tabindex="-1"></a>     levels <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Female&quot;</span>)</span>
+<span id="cb19-15"><a href="control-script-for-modeling-user-input.html#cb19-15" aria-hidden="true" tabindex="-1"></a>     label <span class="ot">=</span> <span class="st">&quot;Sex&quot;</span></span>
+<span id="cb19-16"><a href="control-script-for-modeling-user-input.html#cb19-16" aria-hidden="true" tabindex="-1"></a>     end.p <span class="ot">=</span> <span class="fu">c</span>(endpoints[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span>
+<span id="cb19-17"><a href="control-script-for-modeling-user-input.html#cb19-17" aria-hidden="true" tabindex="-1"></a>   }<span class="cf">else</span> <span class="cf">if</span>(j <span class="sc">==</span> <span class="st">&quot;LOCATION&quot;</span>){</span>
+<span id="cb19-18"><a href="control-script-for-modeling-user-input.html#cb19-18" aria-hidden="true" tabindex="-1"></a>     levels <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;US&quot;</span>, <span class="st">&quot;Non-US&quot;</span>)</span>
+<span id="cb19-19"><a href="control-script-for-modeling-user-input.html#cb19-19" aria-hidden="true" tabindex="-1"></a>     label <span class="ot">=</span> <span class="st">&quot;Geographical~Location&quot;</span> <span class="co">#use ~ for white space</span></span>
+<span id="cb19-20"><a href="control-script-for-modeling-user-input.html#cb19-20" aria-hidden="true" tabindex="-1"></a>     end.p <span class="ot">=</span> <span class="fu">c</span>(endpoints[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span>
+<span id="cb19-21"><a href="control-script-for-modeling-user-input.html#cb19-21" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb19-22"><a href="control-script-for-modeling-user-input.html#cb19-22" aria-hidden="true" tabindex="-1"></a>   <span class="fu">list</span>(<span class="at">levels =</span> levels, <span class="at">label =</span> label, <span class="at">end.p =</span> end.p)</span>
+<span id="cb19-23"><a href="control-script-for-modeling-user-input.html#cb19-23" aria-hidden="true" tabindex="-1"></a>  } <span class="co"># function(j)</span></span>
+<span id="cb19-24"><a href="control-script-for-modeling-user-input.html#cb19-24" aria-hidden="true" tabindex="-1"></a> ) <span class="co"># sapply</span></span></code></pre></div>
+</div>
+<div id="continuous-covariates" class="section level2 hasAnchor" number="5.9">
+<h2><span class="header-section-number">5.9</span> Continuous Covariates<a href="control-script-for-modeling-user-input.html#continuous-covariates" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The set up for continuous covariates is very similar to exposure metrics. Continuous covariates will have the same name on table/figure and in the report context.</p>
+<p>Continuous covariates can be provided as a summary-only variable, which will only show in the demographic summary and will be excluded in modeling covariates search.</p>
+<ul>
+<li>Continuous Covariates Column Names</li>
+</ul>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="control-script-for-modeling-user-input.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CONTINUOUS covariates - list</span></span>
+<span id="cb20-2"><a href="control-script-for-modeling-user-input.html#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Names should correspond to names in analysis dataset.</span></span>
+<span id="cb20-3"><a href="control-script-for-modeling-user-input.html#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># EXAMPLE:</span></span>
+<span id="cb20-4"><a href="control-script-for-modeling-user-input.html#cb20-4" aria-hidden="true" tabindex="-1"></a>orig.con <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;AGE&quot;</span>,<span class="st">&quot;BWT&quot;</span>)</span></code></pre></div>
+<ul>
+<li>Set Up Continuous Covariates</li>
+</ul>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="control-script-for-modeling-user-input.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign more elaborate names to continuous covs</span></span>
+<span id="cb21-2"><a href="control-script-for-modeling-user-input.html#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Write what you want to end up in the plot(s)</span></span>
+<span id="cb21-3"><a href="control-script-for-modeling-user-input.html#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># EXAMPLE:</span></span>
+<span id="cb21-4"><a href="control-script-for-modeling-user-input.html#cb21-4" aria-hidden="true" tabindex="-1"></a>orig.con<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="at">X =</span> orig.con, <span class="at">simplify =</span> F, <span class="at">USE.NAMES =</span> T, <span class="at">FUN =</span> <span class="cf">function</span>(k){</span>
+<span id="cb21-5"><a href="control-script-for-modeling-user-input.html#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(k <span class="sc">==</span> <span class="st">&quot;AGE&quot;</span>){</span>
+<span id="cb21-6"><a href="control-script-for-modeling-user-input.html#cb21-6" aria-hidden="true" tabindex="-1"></a>    title <span class="ot">=</span> <span class="st">&quot;age&quot;</span> <span class="co">#Name of the variable to show in report</span></span>
+<span id="cb21-7"><a href="control-script-for-modeling-user-input.html#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">#end.p = c(endpoints[1]) #use for first endpoint</span></span>
+<span id="cb21-8"><a href="control-script-for-modeling-user-input.html#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">#end.p = &quot;summary only&quot; #use for demographic summary only, won&#39;t be included in modeling</span></span>
+<span id="cb21-9"><a href="control-script-for-modeling-user-input.html#cb21-9" aria-hidden="true" tabindex="-1"></a>    end.p <span class="ot">=</span> <span class="fu">c</span>(endpoints[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span>
+<span id="cb21-10"><a href="control-script-for-modeling-user-input.html#cb21-10" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(k <span class="sc">==</span> <span class="st">&quot;BWT&quot;</span>){</span>
+<span id="cb21-11"><a href="control-script-for-modeling-user-input.html#cb21-11" aria-hidden="true" tabindex="-1"></a>    title <span class="ot">=</span> <span class="st">&quot;Baseline~Bodyweight~(kg)&quot;</span> <span class="co">#use ~ for white space</span></span>
+<span id="cb21-12"><a href="control-script-for-modeling-user-input.html#cb21-12" aria-hidden="true" tabindex="-1"></a>    end.p <span class="ot">=</span> <span class="fu">c</span>(endpoints[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span>
+<span id="cb21-13"><a href="control-script-for-modeling-user-input.html#cb21-13" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb21-14"><a href="control-script-for-modeling-user-input.html#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-15"><a href="control-script-for-modeling-user-input.html#cb21-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb21-16"><a href="control-script-for-modeling-user-input.html#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">title =</span> title, <span class="at">end.p =</span> end.p)</span>
+<span id="cb21-17"><a href="control-script-for-modeling-user-input.html#cb21-17" aria-hidden="true" tabindex="-1"></a> } <span class="co"># function(k)</span></span>
+<span id="cb21-18"><a href="control-script-for-modeling-user-input.html#cb21-18" aria-hidden="true" tabindex="-1"></a>) <span class="co"># sapply</span></span></code></pre></div>
+</div>
+<div id="reference-value-for-continuous-covariates" class="section level2 hasAnchor" number="5.10">
+<h2><span class="header-section-number">5.10</span> Reference Value for Continuous Covariates<a href="control-script-for-modeling-user-input.html#reference-value-for-continuous-covariates" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>It is possible to use reference value for continuous covariates in the modeling. The default value of <code>con.model.ref</code> is “No.”</p>
+<ul>
+<li>Use Reference Value or Not</li>
+</ul>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="control-script-for-modeling-user-input.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Use (continuous variable - reference) in model</span></span>
+<span id="cb22-2"><a href="control-script-for-modeling-user-input.html#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># con.model.ref &lt;- &quot;Yes&quot;</span></span>
+<span id="cb22-3"><a href="control-script-for-modeling-user-input.html#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Not use (continuous variable - reference) in model</span></span>
+<span id="cb22-4"><a href="control-script-for-modeling-user-input.html#cb22-4" aria-hidden="true" tabindex="-1"></a>con.model.ref <span class="ot">&lt;-</span> <span class="st">&quot;No&quot;</span> <span class="co">#Default is &quot;No&quot;</span></span></code></pre></div>
+<ul>
+<li>Provide Reference Value (Optional)</li>
+</ul>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="control-script-for-modeling-user-input.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#The reference number of each continuous variable</span></span>
+<span id="cb23-2"><a href="control-script-for-modeling-user-input.html#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#If not provided, will use median by default</span></span>
+<span id="cb23-3"><a href="control-script-for-modeling-user-input.html#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co">#con.ref&lt;- list(ref = c(AGE = 35, #variable name = reference value</span></span>
+<span id="cb23-4"><a href="control-script-for-modeling-user-input.html#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co">#                       BWT = 70),</span></span>
+<span id="cb23-5"><a href="control-script-for-modeling-user-input.html#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co">#               #already.adjusted.in.data is always F, unless the values are already centered in the data set </span></span>
+<span id="cb23-6"><a href="control-script-for-modeling-user-input.html#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">#               already.adjusted.in.data = F)</span></span></code></pre></div>
+</div>
+<div id="other-options" class="section level2 hasAnchor" number="5.11">
+<h2><span class="header-section-number">5.11</span> Other Options<a href="control-script-for-modeling-user-input.html#other-options" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Most of the options in this section have a numeric value or they are binary-indicator in TRUE/FALSE or “Yes”/“No.”</p>
+<div id="demographic-summary-by-variable" class="section level3 hasAnchor" number="5.11.1">
+<h3><span class="header-section-number">5.11.1</span> Demographic Summary-by Variable<a href="control-script-for-modeling-user-input.html#demographic-summary-by-variable" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><code>demog_grp_var</code> can be any categorical variable in the data set. The default value is “PROT.” Error occurs if <code>demog_grp_var</code> is missing and “PROT” is not a column in the data set.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="control-script-for-modeling-user-input.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grouping variable for demographic summaries</span></span>
+<span id="cb24-2"><a href="control-script-for-modeling-user-input.html#cb24-2" aria-hidden="true" tabindex="-1"></a>demog_grp_var <span class="ot">&lt;-</span> <span class="st">&quot;PROT&quot;</span> <span class="co">#Default is &quot;PROT&quot;</span></span>
+<span id="cb24-3"><a href="control-script-for-modeling-user-input.html#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># demog_grp_var &lt;- &quot;SEX&quot; </span></span></code></pre></div>
+</div>
+<div id="additional-columns-to-include-in-modeling-dataset" class="section level3 hasAnchor" number="5.11.2">
+<h3><span class="header-section-number">5.11.2</span> Additional Columns to Include In Modeling Dataset<a href="control-script-for-modeling-user-input.html#additional-columns-to-include-in-modeling-dataset" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The saved modeling data set will only contains necessary columns (ID, Exposure Metrics, Event-related, Endpoint-related, Covariates, Additional Columns specified by use).</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="control-script-for-modeling-user-input.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">###Additional columns to carry with</span></span>
+<span id="cb25-2"><a href="control-script-for-modeling-user-input.html#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="do">###Could be missing</span></span>
+<span id="cb25-3"><a href="control-script-for-modeling-user-input.html#cb25-3" aria-hidden="true" tabindex="-1"></a>add_col <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;DOSE&quot;</span>)</span></code></pre></div>
+</div>
+<div id="threshold-for-incidence-rate" class="section level3 hasAnchor" number="5.11.3">
+<h3><span class="header-section-number">5.11.3</span> Threshold(%) for Incidence Rate<a href="control-script-for-modeling-user-input.html#threshold-for-incidence-rate" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The endpoint will an incidence rate lower than the threshold will be ignored in the analysis.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="control-script-for-modeling-user-input.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># threshold percentage for considering endpoints</span></span>
+<span id="cb26-2"><a href="control-script-for-modeling-user-input.html#cb26-2" aria-hidden="true" tabindex="-1"></a>p.yes.low <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co">#Default value 10, must be between 0 and 100</span></span></code></pre></div>
+</div>
+<div id="exposure-metric-selection-criteria" class="section level3 hasAnchor" number="5.11.4">
+<h3><span class="header-section-number">5.11.4</span> Exposure Metric Selection Criteria<a href="control-script-for-modeling-user-input.html#exposure-metric-selection-criteria" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Exposure Metric is selected for each endpoint following the same criteria chosen by the user. <code>useDeltaD</code> and <code>p_val</code> are key values.</p>
+<p>Select the exposure metric that satisfies the significant level</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="control-script-for-modeling-user-input.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use p-value instead of Delta D</span></span>
+<span id="cb27-2"><a href="control-script-for-modeling-user-input.html#cb27-2" aria-hidden="true" tabindex="-1"></a> useDeltaD <span class="ot">&lt;-</span> <span class="cn">FALSE</span> <span class="co">#Default value FALSE</span></span>
+<span id="cb27-3"><a href="control-script-for-modeling-user-input.html#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co"># significant level to an exposure metric to stay in base model</span></span>
+<span id="cb27-4"><a href="control-script-for-modeling-user-input.html#cb27-4" aria-hidden="true" tabindex="-1"></a> p_val <span class="ot">&lt;-</span> <span class="fl">0.01</span> <span class="co">#Default significant level 0.01</span></span></code></pre></div>
+<p>If multiple exposure metrics meet the significant level, the one with the smallest <span class="math inline">\(p\)</span>-value will be selected. If no exposure metric meets the significant level, the base model will not contain exposure metric.</p>
+<p>Or, select the exposure metric with largest change in Deviance <span class="math inline">\(\Delta D\)</span> regardless of significant level</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="control-script-for-modeling-user-input.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use Delta D instead of p-value </span></span>
+<span id="cb28-2"><a href="control-script-for-modeling-user-input.html#cb28-2" aria-hidden="true" tabindex="-1"></a>useDeltaD <span class="ot">&lt;-</span> <span class="cn">TRUE</span> <span class="co">#Default value FALSE</span></span></code></pre></div>
+<p>If <code>useDeltaD</code> and <code>p_val</code> are missing in the control script, exposure metric will be selected as the one satisfies significant level 0.01 by default.</p>
+</div>
+<div id="covariates-search" class="section level3 hasAnchor" number="5.11.5">
+<h3><span class="header-section-number">5.11.5</span> Covariates Search<a href="control-script-for-modeling-user-input.html#covariates-search" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="control-script-for-modeling-user-input.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Looking for covariates in modeling</span></span>
+<span id="cb29-2"><a href="control-script-for-modeling-user-input.html#cb29-2" aria-hidden="true" tabindex="-1"></a>analyze_covs <span class="ot">&lt;-</span> <span class="st">&quot;Yes&quot;</span> <span class="co">#Default value &quot;Yes&quot; if at least one covariate provided; otherwise &quot;No&quot;</span></span>
+<span id="cb29-3"><a href="control-script-for-modeling-user-input.html#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="control-script-for-modeling-user-input.html#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># threshold(%) for missing value proportion in continuous covariates</span></span>
+<span id="cb29-5"><a href="control-script-for-modeling-user-input.html#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co"># the variable will be ignored if the missing value is higher than the threshold</span></span>
+<span id="cb29-6"><a href="control-script-for-modeling-user-input.html#cb29-6" aria-hidden="true" tabindex="-1"></a>p.icon <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co">#Default value 10, must be between 0 and 100</span></span>
+<span id="cb29-7"><a href="control-script-for-modeling-user-input.html#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="control-script-for-modeling-user-input.html#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co"># threshold(%) for missing value proportion in categorical covariates</span></span>
+<span id="cb29-9"><a href="control-script-for-modeling-user-input.html#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co"># the variable will be ignored if the missing value is higher than the threshold</span></span>
+<span id="cb29-10"><a href="control-script-for-modeling-user-input.html#cb29-10" aria-hidden="true" tabindex="-1"></a>p.icat <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co">#Default value 10, must be between 0 and 100</span></span></code></pre></div>
+</div>
+<div id="backwards-deletion-criteria" class="section level3 hasAnchor" number="5.11.6">
+<h3><span class="header-section-number">5.11.6</span> Backwards Deletion Criteria<a href="control-script-for-modeling-user-input.html#backwards-deletion-criteria" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Final model is obtained via backwards deletion with the significant level specified by the use.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="control-script-for-modeling-user-input.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Significant level for a variable to stay in the final model</span></span>
+<span id="cb30-2"><a href="control-script-for-modeling-user-input.html#cb30-2" aria-hidden="true" tabindex="-1"></a> p_val_b <span class="ot">&lt;-</span> <span class="fl">0.01</span> <span class="co">#Default significant level 0.01</span></span>
+<span id="cb30-3"><a href="control-script-for-modeling-user-input.html#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Exposure Metric will be in the final model regardless of the significant level. </span></span>
+<span id="cb30-4"><a href="control-script-for-modeling-user-input.html#cb30-4" aria-hidden="true" tabindex="-1"></a> exclude.exp.met.bd <span class="ot">&lt;-</span> <span class="st">&quot;Yes&quot;</span> <span class="co">#Default value &quot;Yes&quot;</span></span></code></pre></div>
+<p>If <code>p_val_b</code> and <code>exclude.exp.met.bd</code>, backwards deletion will be conducted at significant level 0.01 by default and the selected exposure metric (if any) will not be removed by default.</p>
+</div>
+<div id="exposure-metrics-and-continuous-covariates-scales" class="section level3 hasAnchor" number="5.11.7">
+<h3><span class="header-section-number">5.11.7</span> Exposure Metrics and Continuous Covariates Scales<a href="control-script-for-modeling-user-input.html#exposure-metrics-and-continuous-covariates-scales" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>If user chooses to consider scale transformation for exposure metrics or for continuous covariates, the transformed scales of variables (if any) will be compared with the original scales and only one scale of each variable could be included in the data set.</p>
+<p>For the exposure metrics, each scale of each metric will be assessed using a univariate model and the one that meets the exposure metric selection criteria will retain in the model.</p>
+<p>For the continuous covariates, the one with better normality will be selected from the original scale and the log-transformed scale. If the number of subjects is between 3 and 5000, Shapiro-Wilk’s normal test will be used; otherwise, Anderson-Darling will be used.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="control-script-for-modeling-user-input.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Taking log of exposure metrics</span></span>
+<span id="cb31-2"><a href="control-script-for-modeling-user-input.html#cb31-2" aria-hidden="true" tabindex="-1"></a>log_exp <span class="ot">&lt;-</span> <span class="st">&quot;Yes&quot;</span> <span class="co">#Default value &quot;Yes&quot;</span></span>
+<span id="cb31-3"><a href="control-script-for-modeling-user-input.html#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Taking sqrt of exposure metrics</span></span>
+<span id="cb31-4"><a href="control-script-for-modeling-user-input.html#cb31-4" aria-hidden="true" tabindex="-1"></a>sqrt_exp <span class="ot">&lt;-</span> <span class="st">&quot;Yes&quot;</span> <span class="co">#Default value &quot;Yes&quot;</span></span>
+<span id="cb31-5"><a href="control-script-for-modeling-user-input.html#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Taking log of continuous covariates</span></span>
+<span id="cb31-6"><a href="control-script-for-modeling-user-input.html#cb31-6" aria-hidden="true" tabindex="-1"></a>log_covs <span class="ot">&lt;-</span> <span class="st">&quot;Yes&quot;</span> <span class="co">#Default value &quot;Yes&quot;</span></span></code></pre></div>
+<p>In log-transformation, values of zero will be replaced with 0.0001.</p>
+</div>
+<div id="odds-ratio-results" class="section level3 hasAnchor" number="5.11.8">
+<h3><span class="header-section-number">5.11.8</span> Odds-Ratio Results<a href="control-script-for-modeling-user-input.html#odds-ratio-results" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Odds-Ration result of categorical covariates will be generated and included in the report by default.</p>
+<p>To include continuous Covariates, user need to specify a vector of percentiles <code>OR_con_perc</code> where the odds-ratio of the change from median/reference value to each percentile will be shown in tables and figures. For example, the odds-ratio of Age will be shown as the odds-ratio of a decrease in Age from the median Age to 25th percentile in Age and an increase in Age from the median Age to 75th percentile in Age, instead of the odds-ratio of 1 unit increase in Age.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="control-script-for-modeling-user-input.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Odds Ratios plot for Continuous Variable</span></span>
+<span id="cb32-2"><a href="control-script-for-modeling-user-input.html#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Compare from low-th percentile to up-th percentile</span></span>
+<span id="cb32-3"><a href="control-script-for-modeling-user-input.html#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co">#If any of them not specified, continuous variable will be removed from OR plots</span></span>
+<span id="cb32-4"><a href="control-script-for-modeling-user-input.html#cb32-4" aria-hidden="true" tabindex="-1"></a>OR_con_perc <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.25</span>,<span class="fl">0.75</span>) <span class="co">#values must be between 0 and 1</span></span>
+<span id="cb32-5"><a href="control-script-for-modeling-user-input.html#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="control-script-for-modeling-user-input.html#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Include Tables in the report</span></span>
+<span id="cb32-7"><a href="control-script-for-modeling-user-input.html#cb32-7" aria-hidden="true" tabindex="-1"></a>OR_tab <span class="ot">&lt;-</span> <span class="st">&quot;No&quot;</span> <span class="co">#Default value &quot;Yes&quot;</span></span>
+<span id="cb32-8"><a href="control-script-for-modeling-user-input.html#cb32-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-9"><a href="control-script-for-modeling-user-input.html#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Include Figures in the report</span></span>
+<span id="cb32-10"><a href="control-script-for-modeling-user-input.html#cb32-10" aria-hidden="true" tabindex="-1"></a>OR_fig <span class="ot">&lt;-</span> <span class="st">&quot;Yes&quot;</span> <span class="co">#Default value &quot;Yes&quot;</span></span></code></pre></div>
+</div>
+<div id="saved-table-format" class="section level3 hasAnchor" number="5.11.9">
+<h3><span class="header-section-number">5.11.9</span> Saved table format<a href="control-script-for-modeling-user-input.html#saved-table-format" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Tables can be saved in LaTex format (.tex) or in Tab-separated format (.tsv). The LaTex format is easy to be imported or inserted to a LaTex file, while the Tab-separated is easy to be copy&amp;paste in Excel then to be used in Word document. Either format can be used in the auto-generated report via <code>ReportPoisson()</code>.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="control-script-for-modeling-user-input.html#cb33-1" aria-hidden="true" tabindex="-1"></a>LaTex.table <span class="ot">&lt;-</span> <span class="cn">TRUE</span> <span class="co">#Default value FALSE</span></span></code></pre></div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="data-preparation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="prediction-control-script-prediction-user-input-sim.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/index.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

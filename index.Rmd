@@ -1,0 +1,907 @@
+--- 
+title: "Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression"
+author: 
+  - Yuchen Wang, Ph.D., Pfizer Inc 
+  - Luke Fostvedt, Ph.D., Pfizer Inc 
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+# url: your book url like https://bookdown.org/yihui/bookdown
+# cover-image: path to the social sharing image like images/cover.jpg
+description: |
+link-citations: yes
+#github-repo: rstudio/bookdown-demo
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Introduction
+PoissonERM is a tool that was developed as an automation tool for Poisson Regression of binary events (eg occurrence of AEs) for internal use at Pfizer Inc. It implements a full statistical analysis using Poisson Regression on endpoint(s) specified by the user. There is also the ability to predict the incidence rate using user provided simulated exposures (usually from a separate population PK model). `PoissonERM` is the package version of this tool, which can generate an R Markdown report summary that includes all the components typically included in a formal report. 
+
+Poisson regression of binary outcome data utilizes the features of the exponential family of distributions. For the purposes of the analysis that is performed with this package, there are two aspect to highlight. 
+
+- the link function for Poisson regression is log() instead of logit; 
+- Poisson regression can incorporate time to model the incidence rate. 
+
+This tutorial is a document of the methods implemented in `PoissonERM` and the instruction for users.
+
+**Section 2 Quick Start With the Example** is for users to start with provided example folders (https://github.com/yuchenw2015/PoissonERM-Example). It shows how to run functions in `PoissonERM` when the control scripts and data sets are ready. Section 7 provides ideas for users to explore the different options in the example control script.  
+
+**Section 3 Usage** introduces the basic uses of 3 functions in `PoissonERM`.
+
+**Section 4 Data Preparation** shows the data structure of the modeling data set and of the new simulated exposure data set.
+
+**Section 5** and **Section 6** are detailed explanations of the two control scripts. 
+
+Ideally, user should prepare the data sets and the control scripts before running functions in `PoissonERM`.
+
+To install the package, go to https://github.com/yuchenw2015/PoissonERM.
+
+The full section of the analysis method can be found here: https://yuchenw2015.github.io/PoissonERM.
+
+The examples mentioned in this tutorial are here: https://github.com/yuchenw2015/PoissonERM-Example.
+
+# Quick Start with an Example
+This section demonstrates the usage of `PoissonERM` using simulated data set. 
+
+The example folders are here: https://github.com/yuchenw2015/PoissonERM-Example.
+
+Each example folder contains:
+
+- user-input.r: control script for modeling where setting and details about the analysis, exposures, covariates, and output are declared
+- obsdata.csv: data set for modeling
+- prediction-user-input-sim.r: control script for prediction of new simulated exposures. (optional)
+- simdata.csv: new simulated exposures. (required when using the prediction-user-input-sim.r functionality)
+
+There are 3 main functions in `PoissonERM`:
+
+- `ModelPoisson()`: establish E-R relationship between exposures and endpoints via Poisson Regression. 
+- `PredictionPoisson()`: generate prediction figure and table using the base model and the new simulated exposures. 
+- `ReportPoisson()`: generate a report of the modeling results, with/without the prediction results.
+
+The folders "Example1" (with prediction) and "Example2" (no prediction) contain all necessary files (control scripts or data sets) to run functions in `PoissonERM`. Details of the example inputs and datasets used: 
+
+- 2 Exposure Metrics, 3 Categorical Covariates and 2 Continuous Covariates were considered in all 3 Endpoints;
+- All exposures, covariates and events were summarized by protocol number ("PROT").
+- Threshold of low incidence rate was 10\% therefore only 2 endpoints were considered in this analysis (Adverse Event 1 was with incidence rate lower than 10\%).
+- Event sub-type was provided for all endpoints, which breaks down the "observed with event" and "not observed with event" outcomes into more detailed classification.
+- Included covariates in final model if there is any proper one(s).
+- Considered log- and sqrt-transformation for exposure metrics.
+- Considered log-transformation for continuous covariates.
+- No reference value for continuous covariates. 
+- Exposure selection conducted following $p$-value significance criteria, and backwards deletion did not remove exposure metric regardless of significance. Final model may not contain exposure metric if none meet the exposure selection criteria.
+- Tables are all saved as .tex (LaTex format). 
+
+"Example-completed" is a completed analysis folder using the same control scripts and data sets as folder "Example1".
+
+```{r eval=FALSE,include=TRUE}
+library(PoissonERM)
+rm(list = ls(all = TRUE))
+folder.dir1 <- "PoissonERM/Example1/" #change the path accordingly
+ModelPoisson(pathRunType = folder.dir1,
+             user.input = "user-input.r")
+
+PredictionPoisson(pathRunType = getwd(),
+                  prediction.input = "prediction-user-input-sim.R",
+                  model.RData = "myEnvironment.RData")
+
+ReportPoisson(pathRunType = getwd(),
+              model.RData = "myEnvironment.RData",
+              file.name = "Report_with_pred.Rmd")
+
+
+rm(list = ls(all = TRUE))
+folder.dir2 <- "PoissonERM/Example2/" #change the path accordingly
+ModelPoisson(pathRunType = folder.dir2,
+             user.input = "user-input.r")
+
+ReportPoisson(pathRunType = getwd(),
+              model.RData = "myEnvironment.RData",
+              file.name = "Report_no_pred.Rmd")
+```
+
+Running this script will perform the complete statistical analysis and generate an .Rmd report (which is ready to knit) with all the details, results, simulations, and conclusions for each example.
+
+
+# Usage 
+
+The complete statistical modeling, including data checks, data imputation, covariate screening, model selection, simulations and model summaries are all wrapped into the `ModelPoisson()` function. Only a control script and dataset are required. All of the output from the modeling is saved into summary folders and endpoint specific folders.
+
+
+## Statistical Analysis: `ModelPoisson()`
+
+```{r eval=FALSE, include=TRUE}
+rm(list = ls(all = TRUE))
+folder.dir <- getwd() 
+ModelPoisson(pathRunType = folder.dir,
+             user.input = "user-input.r",
+             clean = TRUE,
+             save.name = "myEnvironment.RData)
+```
+
+
+- `pathRunType`: The directory where the control scripts and data sets are. All the modeling results will be saved to this directory as well. Must be an absolute path. Default value is getwd().
+
+- `user.input`: The file path of the control script (user-input.r) to source. Default value is NULL. If `user.input` is NULL, user needs to run/source the control file first then run `ModelPoisson()` as
+
+```{r eval=FALSE, include=TRUE}
+rm(list = ls(all = TRUE))
+folder.dir <- getwd()
+source("user-input.r")
+ModelPoisson(pathRunType = folder.dir,
+             user.input = NULL,
+             clean = TRUE,
+             save.name = "myEnvironment.RData")
+
+```
+
+- `clean`: If `TRUE`, clean the folders under the directory `pathRunType` before running a new analysis. Default value of `clean` is `TRUE`.
+- `save.name`: The modeling results and user's modeling options are saved as .RData with the provided name under the directory `pathRunType`. Default value is "myEnvironment.RData".
+
+If the analysis was conducted successfully, several folders will have been created.
+
+- "Demog-Sum" folder contains summary tables of events, exposures, and covariates. 
+- "Cov-EDA" folder contains figures of covariates correlation, exposure summary, and event summary vs time. 
+- A folder is created for each Endpoint has a folder with the user-specified endpoint name.
+
+There will be subfolders within each of the endpoint folders containing:
+
+- a sub-dataset RData file which was used in modeling this endpoint; 
+- "Models" folder containing the saved modeling R objects, the model summary tables, and backwards deletion log.
+- "OR" folder containing the saved Odds-Ratio tables and figures if the final model contains any proper covariates. 
+
+## New Predictions `PredictionPoisson()`
+The modeling results from `ModelPoisson()` can be used for predicting the incidence rate of new specific groups such as treatment groups, patient populations, Age groups etc to reflect the different incidence rates due to the different exposure levels. `PoissonERM` provides easy way to use base model (ignoring covariates) in predicting incidence rate for new simulated exposures and to compare it with the observed incidence rates grouped by exposure level. 
+
+If there is no significant exposure response relationship, the prediction output will only includes the summary of the observed incidence rates and the provided new simulated exposures i.e. no predicted incidence rate results. 
+
+```{r eval=FALSE, include=TRUE}
+folder.dir <- getwd()
+PredictionPoisson(pathRunType = folder.dir,
+                  prediction.input = "prediction-user-input-sim.R",
+                  model.RData = "myEnvironment.RData",
+                  save.name = "myEnvironment_new.RData")
+```
+
+`PredictionPoisson()` creates one folder "Prediction" under each endpoint folder which contains new exposure summary and incidence rate summary. The figures are saved in multiple sizes and can be used as needed. 
+
+- `pathRunType`: The directory where the control scripts and data sets are. All the results will be saved to this directory as well. Must be an absolute path. Default value is getwd().
+
+- `prediction.input`: The file path of the control script (prediction-user-input-sim.r) to source. Default value is NULL. If `prediction.input` is NULL, user needs to run/source the control file first then run `PredictionPoisson()` as
+
+```{r eval=FALSE, include=TRUE}
+folder.dir <- getwd()
+source("prediction-user-input-sim.R")
+ModelPoisson(pathRunType = folder.dir,
+             prediction.input = NULL,
+             model.RData = "myEnvironment.RData",
+             save.name = "myEnvironment_new.RData")
+
+```
+
+- `model.RData`: The saved modeling result object from `ModelPoisson()`, must be located under directory `pathRunType`. Default value is "myEnvironment.RData", which is the default `save.name` value in function `ModelPoisson()`.
+
+- `save.name`: The modeling results and the prediction results are saved as .RData with the provided name under the directory `pathRunType`. Default value is model.RData, which will rewrite the previously saved modeling result.
+
+
+## Report Generation: `ReportPoisson()`
+The modeling results from `ModelPoisson()` or `PredictionPoisson()`can be used to generate an automated .Rmd report.
+
+Notice that the report cannot be generated using the modeling results from `ModelPoisson()` if there is a "Prediction" folder in each endpoint result folder. If the user wants to generate report without prediction results after running `PredictionPoisson()`, user may remove those "Prediction" folders manually or simply clean the R Environment and rerun `ModelPoisson()` with `clean = TRUE`. 
+
+```{r eval=FALSE, include=TRUE}
+folder.dir <- getwd()
+ReportPoisson(pathRunType = folder.dir,
+              model.RData = "myEnvironment.RData",
+              file.name = "Report.Rmd")
+
+```
+
+- `pathRunType`: The directory where the previously saved modeling results (folders and the saved .RData file) located. The generated .Rmd report will be saved to this directory. Must be an absolute path. Default value is getwd().
+- `model.RData`: The saved modeling result object from `ModelPoisson()` or from `PredictionPoisson()`, must be located under directory `pathRunType`. Default value is "myEnvironment.RData", which is the default `save.name` value in function `ModelPoisson()`.
+- `file.name`: The file name for the generated report. The default value is "NULL". If `file.name` is NULL or if `file.name` is not ended with ".Rmd", the default file name will be "Poisson-Regression-Date&Time.Rmd". 
+
+The saved .Rmd file can compile .html report via `Knit` without any further modification. It could be used as an initial draft of a comprehensive report. 
+
+# Data Preparation
+## Data Set for Modeling
+`PoissonERM` is designed for implementing standard binary-endpoint E-R analysis on multiple endpoints. The data set must include:
+
+- A column of "**C**", where any non-NA value indicates dropping the row and NA value indicates including the row in modeling;
+- One column of unique **Subject ID** where the same ID indicates the same subject;
+- One column of **Outcome** where 0 indicates "not observed with event" and 1 indicates "observed with event";
+- One column of **Event Type** (even there is only one endpoint), values could be numeric or characters;
+- One column of **Time** in days;
+- Columns of **Exposure Metrics** in original scale (as many as needed);
+- Columns of **Covariates** (as many as needed) if covariates search or demographic summary is requested;
+- One column of **Demographic-group-by** variable, which could be one of the covariates or a new variable.  
+
+The following is optional:
+- One column of **Event Sub-Type**, providing more detailed categories for "Yes" and "No" in each endpoint;
+- One column of **Grade** if the endpoints are related to Grades such as "$\le \text{Grade} 2$".
+
+Below is a subset of obsdata.csv in the example:
+```{r echo=FALSE, message=F, warning=F, paged.print=FALSE}
+DF <- read.csv("obsdata.csv", header = TRUE)
+knitr::kable(rbind(head(DF[DF$FLAG==1,]),head(DF[DF$FLAG==2,])), row.names = F)
+```
+
+In this example, 
+
+- "PROT" is the "Demographic-summary-by" column. 
+- "ID" is the "subject ID" column, ”DV" is the "Outcome" column. 
+- "Time" is the "Time" column in days.
+- "FLAG" is the "Event Type" column. 
+- "SUB" is the "Event Sub-Type", where the same value with different Event Type values means different event sub-type (nested within the Event Type).
+- "SEX", "RACE", "LOCATION", "AGE", "BWT" are the "covariates" columns. The level values in categorical variables are coded in numbers, and the actual Labels can be provided by user in the control script. 
+- "CAVE1" and "CAVE2" are the "Exposure Metric" columns. 0 values will be replaced by 0.0001 while calculating the log-scale. 
+
+## New Exposure Data Set for Prediction
+The new exposure data set need to contain
+
+- A column of **Group Label** for summarizing the result;
+- Columns of simulated **New Exposure Metrics**.
+
+The data set could contain any other columns.
+
+Below is a subset of the simulated new exposures simdata.csv in the example:
+```{r echo=FALSE, message=F, warning=F, paged.print=FALSE}
+DF <- read.csv("simdata.csv", header = TRUE)
+knitr::kable(rbind(head(DF[DF$GROUP=="100 mg QD",]), 
+                   head(DF[DF$GROUP=="50 mg QD",]),
+                   head(DF[DF$GROUP=="30 mg QD",])), row.names = F)
+```
+
+In this example, each group has 2500 simulated exposures. In practice, the simulated exposures should be a value corresponding to 52 weeks/1 year of the treatment. For the columns in this example:
+
+- "GROUP" is the "Group Label” column. It could be coded in numbers or characters. Levels and Labels can be specified by user in the control script. 
+- "CAVE1" and "CAVE2" are the simulated “New Exposures Metrics”. The exposure column names are not required to be the same as the modeling data set. User can provide the correspondence in the control script.
+- "C" is the additional column for filtering the data set. All 100 mg QD rows are with C = 1. User may hide/only show the 100 mg QD group in the prediction result without modifying data set outside.
+
+
+# Control Script for Modeling: `user-input.r`
+
+There are many modeling options that are specified in the control scripts to see how modeling result may change. The options will all be presented in the context of the example dataset as that is considered to be the easiest way to present all the options in a clear manner. 
+
+The example analysis has the following components which are specified in the `user-input.r` control file.
+
+- 2 Exposure Metrics, 3 Categorical Covariates and 2 Continuous Covariates were considered in all 3 Endpoints;
+- All exposures, covariates and events were summarized by protocol number ("PROT").
+- Threshold of low incidence rate was 10\% therefore only 2 endpoints were considered in this analysis (Adverse Event 1 was with incidence rate lower than 10\%).
+- Event sub-type was provided for all endpoints, which breaks down the "observed with event" and "not observed with event" outcomes into more detailed classification.
+- Included covariates in final model if there is any proper one(s).
+- Considered log- and sqrt-transformation for exposure metrics.
+- Considered log-transformation for continuous covariates.
+- No reference value for continuous covariates. 
+- Exposure selection conducted following $p$-value significance criteria, and backwards deletion did not remove exposure metric regardless of significance. Final model may not contain exposure metric if none meet the exposure selection criteria.
+- Tables are all saved as .tex (LaTex format). 
+
+This section explains how to write a user-input.r control file for modeling. The examples showing below can be used as a template by combining all chunks in order(user needs to update the column names and options accordingly).
+
+The control script require package `tidyverse`.
+```{r eval=FALSE, include=TRUE}
+library(tidyverse)
+```
+## Data set
+`input.data.name` is the data file for modeling. This data file must be under the directory of `pathRunType`.
+
+```{r eval=FALSE, include=TRUE}
+input.data.name <- "obsdata.csv" 
+```
+
+## Unique Patient Identifier
+`pat.num` is the column name of the subject ID variable.
+```{r eval=FALSE, include=TRUE}
+pat.num <- "ID" #ID is the column name in data set
+```
+
+## Time 
+`EVDUR` and `EVDUR.unit` are the time column name in the data set and the time unit. The time values must be in days.
+
+```{r eval=FALSE, include=TRUE}
+#Column for time in days
+EVDUR <- "TIME"
+EVDUR.unit <- "days"
+```
+
+## Endpoints to be analysed
+This section introduces the complex set up regarding the endpoints. 
+
+- Outcome column and levels&labels:
+```{r eval=FALSE, include=TRUE}
+dv <- "DV" #DV is the outcome column name in data set
+# Levels as they appear in the dataset
+dv.levels <- c(0, 1)
+# Labels you'd like to see in the report
+dv.labels <- c("No", "Yes")
+```
+
+- Event Type (Endpoint flag) column
+```{r eval=FALSE, include=TRUE}
+# Column describing endpoints
+endpcolName <- "FLAG" #FLAG is the flag column name in data set
+# Subset of endpoints in analysis dataset to be analyzed
+# Can be numbers or character strings, however they show up in the dataset
+endpoints <- c(1,2,3) #the actual values in FLAG to be used in this analysis
+#endpoints <- c(1,3) #FLAG=2 will be ignored in this analysis
+```
+
+- Event Names set up. Provide the name of each endpoint. 
+```{r eval=FALSE, include=TRUE}
+# ENDPOINTS names.
+# Names for endpoints as they should appear in tables and figures.
+# Should be the same length as the "endpoints" vector above.
+# Any endpoint name cannot be a sub-string of the other one
+# Bad example
+#endpName <- c("Adverse",
+#              "Adverse Event",
+#              "Adverse Event Type")
+
+# EXAMPLE:
+endpName <- c("Adverse Event Type 1",
+              "Adverse Event Type 2",
+              "Adverse Event Type 3")
+
+endpName <- sapply(X = endpName, simplify = F, USE.NAMES = T, FUN = function(n){
+  if(n == "Adverse Event Type 1"){
+    numb <- endpoints[1] #FLAG = 1 (endpoints[1]) is "Adverse Event Type 1"
+    label <- n
+  }else if(n == "Adverse Event Type 2"){
+    numb <- endpoints[2] #FLAG = 2 (endpoints[2]) is "Adverse Event Type 2"
+    label <- n
+  }else if(n == "Adverse Event Type 3"){
+    numb <- endpoints[3] #FLAG = 3 (endpoints[3]) is "Adverse Event Type 3"
+    label <- n
+  }else{
+    numb <- 0
+    label <- 0
+  }
+  endp.list <- c(numb, label)
+  return(endp.list)
+ } # function(n)
+) # sapply
+```
+
+## Event Sub-Type Column and Set up (optional).
+This section introduces the set up for event sub-type information.
+
+`sub.endpcolName` is the column name of the sub-type information, and `sub.endpName` connects the sub-type values to the endpoints names with proper sub-type names.
+
+In the example obsdata.csv, the values in column "SUB" we're all in numbers, and they refer to different sub-type names for different endpoint types. 
+
+`sub.endpcolName` and `sub.endpName` could be missing.
+
+```{r eval=FALSE, include=TRUE}
+sub.endpcolName <- "SUB" #SUB is the column name in the data set
+sub.endpName <- list(`Adverse Event Type 1` = c(`Severe` = 1, 
+                                                `Mild` = 2,
+                                                `None` = 3),
+                     #Endpoint name = c(Actual sub-category name = Value in the column)
+                     `Adverse Event Type 2` = c(`SubType 1` = 1,
+                                                `SubType 2` = 2,
+                                                `SubType 3` = 3,
+                                                `SubType 4` = 4,
+                                                `SubType 5` = 5,
+                                                `SubType 6` = 6),
+                     `Adverse Event Type 3` = c(`Severe` = 1,
+                                                `Moderate` = 2,
+                                                `Mild` = 3,
+                                                `None` = 4))
+
+```
+
+## Grade column and Set up (optional).
+If the endpoints are grade related, provide the grade column name as `dvg` and a summary of grades within each endpoint will be generated.
+
+```{r eval=FALSE, include=TRUE}
+#The same column cannot be set as dvg and sub.endpcolName at the same time
+dvg <- "SUB" #SUB is the column name in the data set
+```
+
+`dvg` could be missing.
+
+Usually,`dvg` and `sub.endpcolName` are not both used in the same analysis. 
+
+## Exposure Metrics
+This section is about the exposure metric information. Beside of the column names `orig.exposureCov`, user needs to provide the names of each exposure metric to show on table/figure or in the report context, as well as the endpoint(s) to use each exposure with. 
+
+- Provide Exposure Metric Columns
+```{r eval=FALSE, include=TRUE}
+# EXPOSURE covariates - list
+# Names should correspond to names in analysis dataset.
+# EXAMPLE:
+orig.exposureCov <- c("CAVE1","CAVE2") #exposure metric column names in data
+```
+
+- Set up Exposure Metrics
+```{r eval=FALSE, include=TRUE}
+desc.exposureCov.1 <- sapply(X = orig.exposureCov, simplify = F, USE.NAMES = T, FUN = function(f){
+  if(f == "CAVE1"){ 
+    #name to show in tables or figures
+    title = "C[ave1]~(ng/mL)" #use ~ for white space; use [x] for subscript text
+    label = "Time-weighted average concentration A" #Name to show in report context
+    #end.p = c(endpoints[1]) #will be used in the first endpoint
+    end.p = c(endpoints[1:3]) #will be used in all 3 endpoints
+  }else if(f == "CAVE2"){
+    title = "C[ave2]~(ng/mL)"
+    label = "Time-weighted average concentration B"
+    end.p = c(endpoints[1:3])
+  }else{
+
+  }
+  list(title = title, label = label, end.p = end.p)
+ } # function(f)
+) # sapply
+```
+
+
+## Categorical Covariates
+The set up for categorical covariates is very similar to exposure metrics. Categorical covariates will have the same name on table/figure and in the report context. 
+
+Categorical covariates can be provided as a summary-only variable, which will only show in the demographic summary and will be excluded in modeling covariates search. 
+
+- Categorical Covariates Column Names
+```{r eval=FALSE, include=TRUE}
+# CATEGORICAL covariates - list
+# Names should correspond to names in analysis dataset.
+# EXAMPLE:
+full.cat <- c("RACE","SEX", "LOCATION")
+```
+
+- Set Up Categorical Covariates
+```{r eval=FALSE, include=TRUE}
+# Assign more elaborate names and factor levels to categorical covs
+# NOTE: Assign the desired reference value as the first element of "levels"
+# EXAMPLE:
+ full.cat.1 <- sapply(X = full.cat, simplify = F, USE.NAMES = T, FUN = function(j){
+   if(j == "RACE"){
+     #categorical values are coded as numbers 1,2,3,4 in data set
+     #the levels vector is corresponding to the order of numerical levels in the data set
+     levels = c("White", "Black", "Asian", "Other") #1="White", 2="Black", ...
+     label = "Race" #Name of the variable to show in report
+     #end.p = c(endpoints[1]) #use for the first endpoint
+     #end.p = "summary only" #use for demographic summary only, won't be included in modeling
+     end.p = c(endpoints[1:3]) #use for all endpoints
+   }else if(j == "SEX"){
+     levels = c("Male", "Female")
+     label = "Sex"
+     end.p = c(endpoints[1:3])
+   }else if(j == "LOCATION"){
+     levels = c("US", "Non-US")
+     label = "Geographical~Location" #use ~ for white space
+     end.p = c(endpoints[1:3])
+   }
+   list(levels = levels, label = label, end.p = end.p)
+  } # function(j)
+ ) # sapply
+```
+
+## Continuous Covariates
+The set up for continuous covariates is very similar to exposure metrics. Continuous covariates will have the same name on table/figure and in the report context. 
+
+Continuous covariates can be provided as a summary-only variable, which will only show in the demographic summary and will be excluded in modeling covariates search. 
+
+
+- Continuous Covariates Column Names
+```{r eval=FALSE, include=TRUE}
+# CONTINUOUS covariates - list
+# Names should correspond to names in analysis dataset.
+# EXAMPLE:
+orig.con <- c("AGE","BWT")
+```
+
+- Set Up Continuous Covariates
+```{r eval=FALSE, include=TRUE}
+# Assign more elaborate names to continuous covs
+# Write what you want to end up in the plot(s)
+# EXAMPLE:
+orig.con.1 <- sapply(X = orig.con, simplify = F, USE.NAMES = T, FUN = function(k){
+  if(k == "AGE"){
+    title = "age" #Name of the variable to show in report
+    #end.p = c(endpoints[1]) #use for first endpoint
+    #end.p = "summary only" #use for demographic summary only, won't be included in modeling
+    end.p = c(endpoints[1:3])
+  }else if(k == "BWT"){
+    title = "Baseline~Bodyweight~(kg)" #use ~ for white space
+    end.p = c(endpoints[1:3])
+  }else{
+
+  }
+  list(title = title, end.p = end.p)
+ } # function(k)
+) # sapply
+```
+
+## Reference Value for Continuous Covariates
+It is possible to use reference value for continuous covariates in the modeling. The default value of `con.model.ref` is "No". 
+
+- Use Reference Value or Not
+```{r eval=FALSE, include=TRUE}
+#Use (continuous variable - reference) in model
+# con.model.ref <- "Yes"
+#Not use (continuous variable - reference) in model
+con.model.ref <- "No" #Default is "No"
+```
+
+- Provide Reference Value (Optional)
+```{r eval=FALSE, include=TRUE}
+#The reference number of each continuous variable
+#If not provided, will use median by default
+#con.ref<- list(ref = c(AGE = 35, #variable name = reference value
+#                       BWT = 70),
+#               #already.adjusted.in.data is always F, unless the values are already centered in the data set 
+#               already.adjusted.in.data = F)
+```
+
+## Other Options
+Most of the options in this section have a numeric value or they are binary-indicator in TRUE/FALSE or "Yes"/"No".
+
+### Demographic Summary-by Variable
+`demog_grp_var` can be any categorical variable in the data set. The default value is "PROT". Error occurs if `demog_grp_var` is missing and "PROT" is not a column in the data set.
+
+```{r eval=FALSE, include=TRUE}
+# Grouping variable for demographic summaries
+demog_grp_var <- "PROT" #Default is "PROT"
+# demog_grp_var <- "SEX" 
+```
+
+### Additional Columns to Include In Modeling Dataset
+The saved modeling data set will only contains necessary columns (ID, Exposure Metrics, Event-related, Endpoint-related, Covariates, Additional Columns specified by use). 
+
+```{r eval=FALSE, include=TRUE}
+###Additional columns to carry with
+###Could be missing
+add_col <- c("DOSE")
+```
+
+### Threshold(\%) for Incidence Rate
+The endpoint will an incidence rate lower than the threshold will be ignored in the analysis.
+
+```{r eval=FALSE, include=TRUE}
+# threshold percentage for considering endpoints
+p.yes.low <- 5 #Default value 10, must be between 0 and 100
+```
+
+### Exposure Metric Selection Criteria
+Exposure Metric is selected for each endpoint following the same criteria chosen by the user. `useDeltaD` and `p_val` are key values. 
+
+Select the exposure metric that satisfies the significant level 
+```{r eval=FALSE, include=TRUE}
+# use p-value instead of Delta D
+ useDeltaD <- FALSE #Default value FALSE
+# significant level to an exposure metric to stay in base model
+ p_val <- 0.01 #Default significant level 0.01
+
+```
+
+If multiple exposure metrics meet the significant level, the one with the smallest $p$-value will be selected. If no exposure metric meets the significant level, the base model will not contain exposure metric. 
+
+
+Or, select the exposure metric with largest change in Deviance $\Delta D$ regardless of significant level
+```{r eval=FALSE, include=TRUE}
+# use Delta D instead of p-value 
+useDeltaD <- TRUE #Default value FALSE
+```
+
+If `useDeltaD` and `p_val` are missing in the control script, exposure metric will be selected as the one satisfies significant level 0.01 by default. 
+
+### Covariates Search
+```{r eval=FALSE, include=TRUE}
+# Looking for covariates in modeling
+analyze_covs <- "Yes" #Default value "Yes" if at least one covariate provided; otherwise "No"
+
+# threshold(%) for missing value proportion in continuous covariates
+# the variable will be ignored if the missing value is higher than the threshold
+p.icon <- 10 #Default value 10, must be between 0 and 100
+
+# threshold(%) for missing value proportion in categorical covariates
+# the variable will be ignored if the missing value is higher than the threshold
+p.icat <- 10 #Default value 10, must be between 0 and 100
+
+```
+
+### Backwards Deletion Criteria
+Final model is obtained via backwards deletion with the significant level specified by the use.
+```{r eval=FALSE, include=TRUE}
+#Significant level for a variable to stay in the final model
+ p_val_b <- 0.01 #Default significant level 0.01
+#Exposure Metric will be in the final model regardless of the significant level. 
+ exclude.exp.met.bd <- "Yes" #Default value "Yes"
+```
+
+If `p_val_b` and `exclude.exp.met.bd`, backwards deletion will be conducted at significant level 0.01 by default and the selected exposure metric (if any) will not be removed by default.
+
+### Exposure Metrics and Continuous Covariates Scales
+If user chooses to consider scale transformation for exposure metrics or for continuous covariates, the transformed scales of variables (if any) will be compared with the original scales and only one scale of each variable could be included in the data set.
+
+For the exposure metrics, each scale of each metric will be assessed using a univariate model and the one that meets the exposure metric selection criteria will retain in the model. 
+
+For the continuous covariates, the one with better normality will be selected from the original scale and the log-transformed scale. If the number of subjects is between 3 and 5000, Shapiro-Wilk's normal test will be used; otherwise, Anderson-Darling will be used.
+
+```{r eval=FALSE, include=TRUE}
+# Taking log of exposure metrics
+log_exp <- "Yes" #Default value "Yes"
+# Taking sqrt of exposure metrics
+sqrt_exp <- "Yes" #Default value "Yes"
+# Taking log of continuous covariates
+log_covs <- "Yes" #Default value "Yes"
+```
+
+In log-transformation, values of zero will be replaced with 0.0001. 
+
+### Odds-Ratio Results
+Odds-Ration result of categorical covariates will be generated and included in the report by default. 
+
+To include continuous Covariates, user need to specify a vector of percentiles `OR_con_perc` where the odds-ratio of the change from median/reference value to each percentile will be shown in tables and figures. For example, the odds-ratio of Age will be shown as the odds-ratio of a decrease in Age from the median Age to 25th percentile in Age and an increase in Age from the median Age to 75th percentile in Age, instead of the odds-ratio of 1 unit increase in Age.
+
+```{r eval=FALSE, include=TRUE}
+#Odds Ratios plot for Continuous Variable
+#Compare from low-th percentile to up-th percentile
+#If any of them not specified, continuous variable will be removed from OR plots
+OR_con_perc <- c(0.25,0.75) #values must be between 0 and 1
+
+#Include Tables in the report
+OR_tab <- "No" #Default value "Yes"
+
+#Include Figures in the report
+OR_fig <- "Yes" #Default value "Yes"
+```
+
+### Saved table format
+Tables can be saved in LaTex format (.tex) or in Tab-separated format (.tsv). The LaTex format is easy to be imported or inserted to a LaTex file, while the Tab-separated is easy to be copy&paste in Excel then to be used in Word document. Either format can be used in the auto-generated report via `ReportPoisson()`.
+
+```{r eval=FALSE, include=TRUE}
+LaTex.table <- TRUE #Default value FALSE
+```
+
+# Prediction Control Script `prediction-user-input-sim.r`
+This section explains how to write a `prediction-user-input-sim.r` control file for predicting the incidence rate using new simulated exposures. The examples showing below can be used as a template by combining all chunks in order(user needs to update the column names and options accordingly).
+
+The control script require package `tidyverse`.
+```{r eval=FALSE, include=TRUE}
+library(tidyverse)
+```
+
+## Bins of Observed Exposure Values
+The observed exposure values will be grouped into bins to calculate the observed incidence rates and they are compared to the model prediction. If `bin_n_obs` is missing, the observed exposures will be grouped into 5 bins by default.
+
+```{r eval=FALSE, include=TRUE}
+#number of bins for grouping exposure values of observations (the data used in modeling)
+bin_n_obs <- 7 #Default value is 5
+```
+
+
+## Simulated Exposure Data Set
+
+`sim_inc_expo_data` is the file name of the new exposure data set. It must under the same folder as all other modeling results.
+```{r eval=FALSE, include=TRUE}
+#Provide the new data set for prediction
+sim_inc_expo_data <- "simdata.csv" 
+```
+
+`Obs_Expo_list` is the exposure metric (original scale) column names in obsdata.csv, and `Sim_Expo_list` is the corresponding names in simdata.csv. In many circumstances, the same exposure metric might have different column names in different data set. 
+
+If `Obs_Expo_list` is missing, it will be set as all exposure metric column values occurred in obsdata.csv. 
+
+If `Sim_Expo_list` is missing, it will be set as the same value as `Obs_Expo_list`
+
+
+```{r eval=FALSE, include=TRUE}
+#Selected Exposure Metric(s) column(s) in Obs Data (not sim data) shown on prediction plot
+#If Obs_Expo_list is missing, Obs_Expo_list = names(orig.exposureCov) which was saved in the modeling result
+Obs_Expo_list <- c("CAVE1", "CAVE2")
+
+#Metric column(s) in simulation data to be used as Exposure(s) on plot
+#the order needs to be consistent with Obs_Expo_list
+#If Sim_Expo_list is missing, Sim_Expo_list =  Obs_Expo_list 
+Sim_Expo_list <- c("CAVE1", "CAVE2")
+```
+
+## New Exposure Summary Metric
+The center of exposures in each group can be calculated as the geometric mean:
+
+```{r eval=FALSE, include=TRUE}
+#Statistic of Exposure used to calculate fitted value.
+#"median", "geomean";
+Center_Metric <- "geomean" #Default value "geomean"
+Center_Metric_name <- "geometric mean"
+```
+
+It could also be calculated as the median:
+```{r eval=FALSE, include=TRUE}
+#Statistic of Exposure used to calculate fitted value.
+#"median", "geomean";
+Center_Metric <- "median" #Default value "geomean"
+Center_Metric_name <- "Median"
+```
+
+If `Center_Metric` is missing, the default value is "geomean". If `Center_Metric_name` is missing, the metric name will be "geometric mean" or "median" based on `Center_Metric`. 
+
+
+## Group Label Variable
+
+`grp_colname` is the variable to summary and display exposure values by. `grp_colname_tab` is the name to display in tables. 
+If `grp_colname` is missing, the exposure values will be summarized and displayed as one group; if `grp_colname_tab` is missing, the default value is "Label". 
+
+```{r eval=FALSE, include=TRUE}
+#Group Label column name
+
+grp_colname <- "GROUP" #column name in simdata.csv
+grp_colname_tab <- "Treatment" #name to display in tables
+```
+
+`levels.grp` and `labels.grp` are the levels information for the group variable.
+
+```{r eval=FALSE, include=TRUE}
+#provide levels in Group Label column
+#if levels.grp is missing, a vector of the unique values in grp_colname will be levels.grp
+levels.grp <- c("10 mg QD", 
+                "30 mg QD", 
+                "50 mg QD", 
+                "100 mg QD") 
+#provide labels of each level in Group Label column
+#if labels.grp is missing, labels.grp = levels.grp
+labels.grp <- c("10 mg once daily", 
+                "30 mg once daily", 
+                "50 mg once daily", 
+                "100 mg once daily") 
+```
+
+## Filter Condition (Optional)
+It is possible to use a subset of simdata.csv without modifying the data file. 
+```{r eval=FALSE, include=TRUE}
+# Only include partial exposure records
+filter_condition <- "GROUP != '10 mg QD'" #remove 10 mg QD group
+
+#In the example simdata.csv, only 100 mg QD has C = 1
+#filter_condition <- "C == 1" # only keep 100 mg QD group
+#filter_condition <- "GROUP == '100 mg QD'"
+```
+
+`filter_condition` can be missing if all exposure values will be used.
+
+
+## Caption for Simulated Exposure Data
+Add information for the simulated exposure data. If `expo_pred_tab_caption` is missing, the standard description will be used: "Predicted exposure metric for each dose are derived from simulated patients with randomly drawn random effect parameters as described by the final population PK model and body weights sampled from observations."
+
+```{r eval=FALSE, include=TRUE}
+expo_pred_tab_caption <- "Predicted exposure metric values for each dose are derived from 2,500 simulated subjects."
+
+```
+
+# Example Adjusting Output
+
+This section provides ideas to adjust the output of the provided examples by editing control script. 
+
+## Demographic Summary Tables
+
+The default for summarizing is to summarize by study. However, it is possible to summarize all the exposure metrics and other covariates by levels of a categorical covariate. The following adjustment to the control script will result in a summary table summarized across Sex (ie Male and Female). 
+```{r eval=FALSE, include=TRUE}
+demog_grp_var <- "SEX"
+```
+
+## Use different Exposure Metrics in different Endpoints
+
+There may be situations where each of the exposure metrics are not of interest for all of the endpoints. This may also be the case if a full analysis is desired for each of the exposure metrics. For the example analysis, the following change will result in using CAVE1 for only for endpoint 1 and use CAVE2 only for endpoints 2 and 3.
+```{r eval=FALSE, include=TRUE}
+orig.exposureCov <- c("CAVE1","CAVE2") #exposure metric column names in data
+
+desc.exposureCov.1 <- sapply(X = orig.exposureCov, simplify = F, USE.NAMES = T, FUN = function(f){
+  if(f == "CAVE1"){
+    #name to show in tables or figures
+    title = "C[ave1]~(ng/mL)" #use ~ for white space; use [x] for subscript text
+    label = "Time-weighted average concentration A" #Name to show in report context
+    end.p = c(endpoints[1]) #will be used in the first endpoint
+    #end.p = c(endpoints[1:3]) #will be used in all 3 endpoints
+  }else if(f == "CAVE2"){
+    title = "C[ave2]~(ng/mL)"
+    label = "Time-weighted average concentration B"
+    end.p = c(endpoints[2:3])
+    #end.p = c(endpoints[1:3])
+  }else{
+
+  }
+  list(title = title, label = label, end.p = end.p)
+} # function(f)
+) # sapply
+```
+
+## Threshold(\%) for Incidence Rate 
+In the event that an event incidence rate is low, the analyst should seriously consider if this analysis is appropriate. The statistical properties for generalized linear models may not hold when there is a low incidence rate. It is not recommended to reduce the incidence rate threshold below 10%. In the example analysis, setting the incidence rate to be at least 5%, setting `p.yes.low` to 5, then Adverse Event Type 1 will be included in the analysis regardless of its low incidence rate.
+```{r eval=FALSE, include=TRUE}
+# threshold percentage for considering endpoints
+p.yes.low <- 5 #Default value 10, must be between 0 and 100
+```
+
+## Exposure and Model Selection Criteria
+The default criteria for covariate evaluation is to use a p-value significance. When there is no exposure response relationship, or it is a weak relationship, a small `p_val` may result in no exposure metric selected during the exposure selection stage of the analysis.
+
+It is possible to use $\Delta D$ as the exposure selection criteria which compares nested models for model overall model improvement. The best exposure metric will be selected regardless of its significance.
+
+```{r eval=FALSE, include=TRUE}
+# use Delta D instead of p-value
+# useDeltaD <- FALSE
+useDeltaD <- TRUE #Default value FALSE
+#significant level to an exposure metric to stay in base model
+#p_val <- 0.01 #Default significant level 0.01
+```
+
+Change the criteria for covariates to stay in final model during the backwards deletion.
+```{r eval=FALSE, include=TRUE}
+#Significant level for a variable to stay in the final model
+#p_val_b <- 0.01 #Default significant level 0.01
+p_val_b <- 0.1
+```
+
+Let the selected exposure metric be removed if it does not meet the backwards deletion criteria.
+```{r eval=FALSE, include=TRUE}
+#Exposure Metric will be in the final model regardless of the significant level.
+exclude.exp.met.bd <- "No" #Default value "Yes"
+
+```
+
+## Scale of Exposure Metrics
+
+In order to evaluate exposure metrics on the original scale and not consider any transformations, the following arguments should be changed to: 
+```{r eval=FALSE, include=TRUE}
+log_exp <- "No" #Default value "Yes"
+sqrt_exp <- "No" #Default value "Yes"
+```
+
+## Covariates Search
+In some instances, relationship between the endpoint and covariates may not be of interest. The covariate evaluation will not be performed and the final model will only include the best exposure metric, provided it meet the significance criteria for inclusion.
+```{r eval=FALSE, include=TRUE}
+#Looking for covariates in modeling
+analyze_covs <- "No" #Default value "Yes" if at least one covariate provided; otherwise "No"
+```
+
+## Summary-only Covariates
+
+There may be occasions when additional summary information in desired, but the variable is not desired for the analysis. Categorical and/or continuous covariates can be declares as "summary only" meaning they will only be included in the summary tables. In the code chunk below, the covariate body wright (BWT) will only be included as a summary-only variable.
+
+```{r eval=FALSE, include=TRUE}
+...
+  title = "Baseline~Bodyweight~(kg)" #use ~ for white space
+  end.p = "summary only"
+  #end.p = c(endpoints[1:3])
+...
+```
+Covariate(s) will still show in demographic summary tables but won't be included in modeling. Modeling results might change.
+
+Exposure Metrics must be used for at least one endpoint in modeling.
+
+## Reference value for Continuous Covariates
+
+To use reference value for continuous covariates
+```{r eval=FALSE, include=TRUE}
+con.model.ref <- "Yes"  # default is "No"
+```
+
+To provide reference values instead of using median values
+```{r eval=FALSE, include=TRUE}
+con.model.ref <- "Yes"
+con.ref<- list(ref = c(AGE = 35, #variable name = reference value
+                       BWT = 70),
+               already.adjusted.in.data = F)
+```
+
+
+
+## Save all tables as .tsv files instead of .tex files
+```{r eval=FALSE, include=TRUE}
+LaTex.table <- FALSE
+```
+
+
+
+# Acknowledgements
+Many thanks to 
+
+- Jessica Wojciechowski, Ph.D.
+- Donald Irby, Ph.D.
+- Yeamin Huh, Ph.D.
+- Vivek S Purohit, Ph.D.
+- Timothy Nicholas, Ph.D.
+
+

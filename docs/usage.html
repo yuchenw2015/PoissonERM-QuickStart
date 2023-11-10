@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Usage | Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression</title>
+  <meta name="description" content="Chapter 3 Usage | Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression" />
+  <meta name="generator" content="bookdown 0.36 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Usage | Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Usage | Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression" />
+  
+  
+  
+
+<meta name="author" content="Yuchen Wang, Ph.D., Pfizer Inc" />
+<meta name="author" content="Luke Fostvedt, Ph.D., Pfizer Inc" />
+
+
+<meta name="date" content="2023-11-10" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="quick-start-with-an-example.html"/>
+<link rel="next" href="data-preparation.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Package-like Tool: PoissonERM</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="quick-start-with-an-example.html"><a href="quick-start-with-an-example.html"><i class="fa fa-check"></i><b>2</b> Quick Start with an Example</a></li>
+<li class="chapter" data-level="3" data-path="usage.html"><a href="usage.html"><i class="fa fa-check"></i><b>3</b> Usage</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="usage.html"><a href="usage.html#statistical-analysis-modelpoisson"><i class="fa fa-check"></i><b>3.1</b> Statistical Analysis: <code>ModelPoisson()</code></a></li>
+<li class="chapter" data-level="3.2" data-path="usage.html"><a href="usage.html#new-predictions-predictionpoisson"><i class="fa fa-check"></i><b>3.2</b> New Predictions <code>PredictionPoisson()</code></a></li>
+<li class="chapter" data-level="3.3" data-path="usage.html"><a href="usage.html#report-generation-reportpoisson"><i class="fa fa-check"></i><b>3.3</b> Report Generation: <code>ReportPoisson()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="data-preparation.html"><a href="data-preparation.html"><i class="fa fa-check"></i><b>4</b> Data Preparation</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="data-preparation.html"><a href="data-preparation.html#data-set-for-modeling"><i class="fa fa-check"></i><b>4.1</b> Data Set for Modeling</a></li>
+<li class="chapter" data-level="4.2" data-path="data-preparation.html"><a href="data-preparation.html#new-exposure-data-set-for-prediction"><i class="fa fa-check"></i><b>4.2</b> New Exposure Data Set for Prediction</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html"><i class="fa fa-check"></i><b>5</b> Control Script for Modeling: <code>user-input.r</code></a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#data-set"><i class="fa fa-check"></i><b>5.1</b> Data set</a></li>
+<li class="chapter" data-level="5.2" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#unique-patient-identifier"><i class="fa fa-check"></i><b>5.2</b> Unique Patient Identifier</a></li>
+<li class="chapter" data-level="5.3" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#time"><i class="fa fa-check"></i><b>5.3</b> Time</a></li>
+<li class="chapter" data-level="5.4" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#endpoints-to-be-analysed"><i class="fa fa-check"></i><b>5.4</b> Endpoints to be analysed</a></li>
+<li class="chapter" data-level="5.5" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#event-sub-type-column-and-set-up-optional."><i class="fa fa-check"></i><b>5.5</b> Event Sub-Type Column and Set up (optional).</a></li>
+<li class="chapter" data-level="5.6" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#grade-column-and-set-up-optional."><i class="fa fa-check"></i><b>5.6</b> Grade column and Set up (optional).</a></li>
+<li class="chapter" data-level="5.7" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#exposure-metrics"><i class="fa fa-check"></i><b>5.7</b> Exposure Metrics</a></li>
+<li class="chapter" data-level="5.8" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#categorical-covariates"><i class="fa fa-check"></i><b>5.8</b> Categorical Covariates</a></li>
+<li class="chapter" data-level="5.9" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#continuous-covariates"><i class="fa fa-check"></i><b>5.9</b> Continuous Covariates</a></li>
+<li class="chapter" data-level="5.10" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#reference-value-for-continuous-covariates"><i class="fa fa-check"></i><b>5.10</b> Reference Value for Continuous Covariates</a></li>
+<li class="chapter" data-level="5.11" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#other-options"><i class="fa fa-check"></i><b>5.11</b> Other Options</a>
+<ul>
+<li class="chapter" data-level="5.11.1" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#demographic-summary-by-variable"><i class="fa fa-check"></i><b>5.11.1</b> Demographic Summary-by Variable</a></li>
+<li class="chapter" data-level="5.11.2" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#additional-columns-to-include-in-modeling-dataset"><i class="fa fa-check"></i><b>5.11.2</b> Additional Columns to Include In Modeling Dataset</a></li>
+<li class="chapter" data-level="5.11.3" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#threshold-for-incidence-rate"><i class="fa fa-check"></i><b>5.11.3</b> Threshold(%) for Incidence Rate</a></li>
+<li class="chapter" data-level="5.11.4" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#exposure-metric-selection-criteria"><i class="fa fa-check"></i><b>5.11.4</b> Exposure Metric Selection Criteria</a></li>
+<li class="chapter" data-level="5.11.5" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#covariates-search"><i class="fa fa-check"></i><b>5.11.5</b> Covariates Search</a></li>
+<li class="chapter" data-level="5.11.6" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#backwards-deletion-criteria"><i class="fa fa-check"></i><b>5.11.6</b> Backwards Deletion Criteria</a></li>
+<li class="chapter" data-level="5.11.7" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#exposure-metrics-and-continuous-covariates-scales"><i class="fa fa-check"></i><b>5.11.7</b> Exposure Metrics and Continuous Covariates Scales</a></li>
+<li class="chapter" data-level="5.11.8" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#odds-ratio-results"><i class="fa fa-check"></i><b>5.11.8</b> Odds-Ratio Results</a></li>
+<li class="chapter" data-level="5.11.9" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#saved-table-format"><i class="fa fa-check"></i><b>5.11.9</b> Saved table format</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html"><i class="fa fa-check"></i><b>6</b> Prediction Control Script <code>prediction-user-input-sim.r</code></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#bins-of-observed-exposure-values"><i class="fa fa-check"></i><b>6.1</b> Bins of Observed Exposure Values</a></li>
+<li class="chapter" data-level="6.2" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#simulated-exposure-data-set"><i class="fa fa-check"></i><b>6.2</b> Simulated Exposure Data Set</a></li>
+<li class="chapter" data-level="6.3" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#new-exposure-summary-metric"><i class="fa fa-check"></i><b>6.3</b> New Exposure Summary Metric</a></li>
+<li class="chapter" data-level="6.4" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#group-label-variable"><i class="fa fa-check"></i><b>6.4</b> Group Label Variable</a></li>
+<li class="chapter" data-level="6.5" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#filter-condition-optional"><i class="fa fa-check"></i><b>6.5</b> Filter Condition (Optional)</a></li>
+<li class="chapter" data-level="6.6" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#caption-for-simulated-exposure-data"><i class="fa fa-check"></i><b>6.6</b> Caption for Simulated Exposure Data</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html"><i class="fa fa-check"></i><b>7</b> Example Adjusting Output</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#demographic-summary-tables"><i class="fa fa-check"></i><b>7.1</b> Demographic Summary Tables</a></li>
+<li class="chapter" data-level="7.2" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#use-different-exposure-metrics-in-different-endpoints"><i class="fa fa-check"></i><b>7.2</b> Use different Exposure Metrics in different Endpoints</a></li>
+<li class="chapter" data-level="7.3" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#threshold-for-incidence-rate-1"><i class="fa fa-check"></i><b>7.3</b> Threshold(%) for Incidence Rate</a></li>
+<li class="chapter" data-level="7.4" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#exposure-and-model-selection-criteria"><i class="fa fa-check"></i><b>7.4</b> Exposure and Model Selection Criteria</a></li>
+<li class="chapter" data-level="7.5" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#scale-of-exposure-metrics"><i class="fa fa-check"></i><b>7.5</b> Scale of Exposure Metrics</a></li>
+<li class="chapter" data-level="7.6" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#covariates-search-1"><i class="fa fa-check"></i><b>7.6</b> Covariates Search</a></li>
+<li class="chapter" data-level="7.7" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#summary-only-covariates"><i class="fa fa-check"></i><b>7.7</b> Summary-only Covariates</a></li>
+<li class="chapter" data-level="7.8" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#reference-value-for-continuous-covariates-1"><i class="fa fa-check"></i><b>7.8</b> Reference value for Continuous Covariates</a></li>
+<li class="chapter" data-level="7.9" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#save-all-tables-as-.tsv-files-instead-of-.tex-files"><i class="fa fa-check"></i><b>7.9</b> Save all tables as .tsv files instead of .tex files</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="acknowledgements.html"><a href="acknowledgements.html"><i class="fa fa-check"></i><b>8</b> Acknowledgements</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="usage" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Chapter 3</span> Usage<a href="usage.html#usage" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The complete statistical modeling, including data checks, data imputation, covariate screening, model selection, simulations and model summaries are all wrapped into the <code>ModelPoisson()</code> function. Only a control script and dataset are required. All of the output from the modeling is saved into summary folders and endpoint specific folders.</p>
+<div id="statistical-analysis-modelpoisson" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Statistical Analysis: <code>ModelPoisson()</code><a href="usage.html#statistical-analysis-modelpoisson" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="usage.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>(<span class="at">all =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb2-2"><a href="usage.html#cb2-2" aria-hidden="true" tabindex="-1"></a>folder.dir <span class="ot">&lt;-</span> <span class="fu">getwd</span>() </span>
+<span id="cb2-3"><a href="usage.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ModelPoisson</span>(<span class="at">pathRunType =</span> folder.dir,</span>
+<span id="cb2-4"><a href="usage.html#cb2-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">user.input =</span> <span class="st">&quot;user-input.r&quot;</span>,</span>
+<span id="cb2-5"><a href="usage.html#cb2-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">clean =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-6"><a href="usage.html#cb2-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">save.name =</span> <span class="st">&quot;myEnvironment.RData)</span></span></code></pre></div>
+<ul>
+<li><p><code>pathRunType</code>: The directory where the control scripts and data sets are. All the modeling results will be saved to this directory as well. Must be an absolute path. Default value is getwd().</p></li>
+<li><p><code>user.input</code>: The file path of the control script (user-input.r) to source. Default value is NULL. If <code>user.input</code> is NULL, user needs to run/source the control file first then run <code>ModelPoisson()</code> as</p></li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="usage.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>(<span class="at">all =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-2"><a href="usage.html#cb3-2" aria-hidden="true" tabindex="-1"></a>folder.dir <span class="ot">&lt;-</span> <span class="fu">getwd</span>()</span>
+<span id="cb3-3"><a href="usage.html#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;user-input.r&quot;</span>)</span>
+<span id="cb3-4"><a href="usage.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ModelPoisson</span>(<span class="at">pathRunType =</span> folder.dir,</span>
+<span id="cb3-5"><a href="usage.html#cb3-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">user.input =</span> <span class="cn">NULL</span>,</span>
+<span id="cb3-6"><a href="usage.html#cb3-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">clean =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-7"><a href="usage.html#cb3-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">save.name =</span> <span class="st">&quot;myEnvironment.RData&quot;</span>)</span></code></pre></div>
+<ul>
+<li><code>clean</code>: If <code>TRUE</code>, clean the folders under the directory <code>pathRunType</code> before running a new analysis. Default value of <code>clean</code> is <code>TRUE</code>.</li>
+<li><code>save.name</code>: The modeling results and user’s modeling options are saved as .RData with the provided name under the directory <code>pathRunType</code>. Default value is “myEnvironment.RData.”</li>
+</ul>
+<p>If the analysis was conducted successfully, several folders will have been created.</p>
+<ul>
+<li>“Demog-Sum” folder contains summary tables of events, exposures, and covariates.</li>
+<li>“Cov-EDA” folder contains figures of covariates correlation, exposure summary, and event summary vs time.</li>
+<li>A folder is created for each Endpoint has a folder with the user-specified endpoint name.</li>
+</ul>
+<p>There will be subfolders within each of the endpoint folders containing:</p>
+<ul>
+<li>a sub-dataset RData file which was used in modeling this endpoint;</li>
+<li>“Models” folder containing the saved modeling R objects, the model summary tables, and backwards deletion log.</li>
+<li>“OR” folder containing the saved Odds-Ratio tables and figures if the final model contains any proper covariates.</li>
+</ul>
+</div>
+<div id="new-predictions-predictionpoisson" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> New Predictions <code>PredictionPoisson()</code><a href="usage.html#new-predictions-predictionpoisson" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The modeling results from <code>ModelPoisson()</code> can be used for predicting the incidence rate of new specific groups such as treatment groups, patient populations, Age groups etc to reflect the different incidence rates due to the different exposure levels. <code>PoissonERM</code> provides easy way to use base model (ignoring covariates) in predicting incidence rate for new simulated exposures and to compare it with the observed incidence rates grouped by exposure level.</p>
+<p>If there is no significant exposure response relationship, the prediction output will only includes the summary of the observed incidence rates and the provided new simulated exposures i.e. no predicted incidence rate results.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="usage.html#cb4-1" aria-hidden="true" tabindex="-1"></a>folder.dir <span class="ot">&lt;-</span> <span class="fu">getwd</span>()</span>
+<span id="cb4-2"><a href="usage.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">PredictionPoisson</span>(<span class="at">pathRunType =</span> folder.dir,</span>
+<span id="cb4-3"><a href="usage.html#cb4-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">prediction.input =</span> <span class="st">&quot;prediction-user-input-sim.R&quot;</span>,</span>
+<span id="cb4-4"><a href="usage.html#cb4-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">model.RData =</span> <span class="st">&quot;myEnvironment.RData&quot;</span>,</span>
+<span id="cb4-5"><a href="usage.html#cb4-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">save.name =</span> <span class="st">&quot;myEnvironment_new.RData&quot;</span>)</span></code></pre></div>
+<p><code>PredictionPoisson()</code> creates one folder “Prediction” under each endpoint folder which contains new exposure summary and incidence rate summary. The figures are saved in multiple sizes and can be used as needed.</p>
+<ul>
+<li><p><code>pathRunType</code>: The directory where the control scripts and data sets are. All the results will be saved to this directory as well. Must be an absolute path. Default value is getwd().</p></li>
+<li><p><code>prediction.input</code>: The file path of the control script (prediction-user-input-sim.r) to source. Default value is NULL. If <code>prediction.input</code> is NULL, user needs to run/source the control file first then run <code>PredictionPoisson()</code> as</p></li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="usage.html#cb5-1" aria-hidden="true" tabindex="-1"></a>folder.dir <span class="ot">&lt;-</span> <span class="fu">getwd</span>()</span>
+<span id="cb5-2"><a href="usage.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;prediction-user-input-sim.R&quot;</span>)</span>
+<span id="cb5-3"><a href="usage.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ModelPoisson</span>(<span class="at">pathRunType =</span> folder.dir,</span>
+<span id="cb5-4"><a href="usage.html#cb5-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">prediction.input =</span> <span class="cn">NULL</span>,</span>
+<span id="cb5-5"><a href="usage.html#cb5-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">model.RData =</span> <span class="st">&quot;myEnvironment.RData&quot;</span>,</span>
+<span id="cb5-6"><a href="usage.html#cb5-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">save.name =</span> <span class="st">&quot;myEnvironment_new.RData&quot;</span>)</span></code></pre></div>
+<ul>
+<li><p><code>model.RData</code>: The saved modeling result object from <code>ModelPoisson()</code>, must be located under directory <code>pathRunType</code>. Default value is “myEnvironment.RData,” which is the default <code>save.name</code> value in function <code>ModelPoisson()</code>.</p></li>
+<li><p><code>save.name</code>: The modeling results and the prediction results are saved as .RData with the provided name under the directory <code>pathRunType</code>. Default value is model.RData, which will rewrite the previously saved modeling result.</p></li>
+</ul>
+</div>
+<div id="report-generation-reportpoisson" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Report Generation: <code>ReportPoisson()</code><a href="usage.html#report-generation-reportpoisson" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The modeling results from <code>ModelPoisson()</code> or <code>PredictionPoisson()</code>can be used to generate an automated .Rmd report.</p>
+<p>Notice that the report cannot be generated using the modeling results from <code>ModelPoisson()</code> if there is a “Prediction” folder in each endpoint result folder. If the user wants to generate report without prediction results after running <code>PredictionPoisson()</code>, user may remove those “Prediction” folders manually or simply clean the R Environment and rerun <code>ModelPoisson()</code> with <code>clean = TRUE</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="usage.html#cb6-1" aria-hidden="true" tabindex="-1"></a>folder.dir <span class="ot">&lt;-</span> <span class="fu">getwd</span>()</span>
+<span id="cb6-2"><a href="usage.html#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ReportPoisson</span>(<span class="at">pathRunType =</span> folder.dir,</span>
+<span id="cb6-3"><a href="usage.html#cb6-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">model.RData =</span> <span class="st">&quot;myEnvironment.RData&quot;</span>,</span>
+<span id="cb6-4"><a href="usage.html#cb6-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">file.name =</span> <span class="st">&quot;Report.Rmd&quot;</span>)</span></code></pre></div>
+<ul>
+<li><code>pathRunType</code>: The directory where the previously saved modeling results (folders and the saved .RData file) located. The generated .Rmd report will be saved to this directory. Must be an absolute path. Default value is getwd().</li>
+<li><code>model.RData</code>: The saved modeling result object from <code>ModelPoisson()</code> or from <code>PredictionPoisson()</code>, must be located under directory <code>pathRunType</code>. Default value is “myEnvironment.RData,” which is the default <code>save.name</code> value in function <code>ModelPoisson()</code>.</li>
+<li><code>file.name</code>: The file name for the generated report. The default value is “NULL.” If <code>file.name</code> is NULL or if <code>file.name</code> is not ended with “.Rmd,” the default file name will be “Poisson-Regression-Date&amp;Time.Rmd.”</li>
+</ul>
+<p>The saved .Rmd file can compile .html report via <code>Knit</code> without any further modification. It could be used as an initial draft of a comprehensive report.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="quick-start-with-an-example.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="data-preparation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/index.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

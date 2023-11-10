@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 6 Prediction Control Script prediction-user-input-sim.r | Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression</title>
+  <meta name="description" content="Chapter 6 Prediction Control Script prediction-user-input-sim.r | Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression" />
+  <meta name="generator" content="bookdown 0.36 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 6 Prediction Control Script prediction-user-input-sim.r | Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 6 Prediction Control Script prediction-user-input-sim.r | Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression" />
+  
+  
+  
+
+<meta name="author" content="Yuchen Wang, Ph.D., Pfizer Inc" />
+<meta name="author" content="Luke Fostvedt, Ph.D., Pfizer Inc" />
+
+
+<meta name="date" content="2023-11-10" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="control-script-for-modeling-user-input.html"/>
+<link rel="next" href="example-adjusting-output.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Package-like Tool: PoissonERM</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="quick-start-with-an-example.html"><a href="quick-start-with-an-example.html"><i class="fa fa-check"></i><b>2</b> Quick Start with an Example</a></li>
+<li class="chapter" data-level="3" data-path="usage.html"><a href="usage.html"><i class="fa fa-check"></i><b>3</b> Usage</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="usage.html"><a href="usage.html#statistical-analysis-modelpoisson"><i class="fa fa-check"></i><b>3.1</b> Statistical Analysis: <code>ModelPoisson()</code></a></li>
+<li class="chapter" data-level="3.2" data-path="usage.html"><a href="usage.html#new-predictions-predictionpoisson"><i class="fa fa-check"></i><b>3.2</b> New Predictions <code>PredictionPoisson()</code></a></li>
+<li class="chapter" data-level="3.3" data-path="usage.html"><a href="usage.html#report-generation-reportpoisson"><i class="fa fa-check"></i><b>3.3</b> Report Generation: <code>ReportPoisson()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="data-preparation.html"><a href="data-preparation.html"><i class="fa fa-check"></i><b>4</b> Data Preparation</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="data-preparation.html"><a href="data-preparation.html#data-set-for-modeling"><i class="fa fa-check"></i><b>4.1</b> Data Set for Modeling</a></li>
+<li class="chapter" data-level="4.2" data-path="data-preparation.html"><a href="data-preparation.html#new-exposure-data-set-for-prediction"><i class="fa fa-check"></i><b>4.2</b> New Exposure Data Set for Prediction</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html"><i class="fa fa-check"></i><b>5</b> Control Script for Modeling: <code>user-input.r</code></a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#data-set"><i class="fa fa-check"></i><b>5.1</b> Data set</a></li>
+<li class="chapter" data-level="5.2" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#unique-patient-identifier"><i class="fa fa-check"></i><b>5.2</b> Unique Patient Identifier</a></li>
+<li class="chapter" data-level="5.3" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#time"><i class="fa fa-check"></i><b>5.3</b> Time</a></li>
+<li class="chapter" data-level="5.4" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#endpoints-to-be-analysed"><i class="fa fa-check"></i><b>5.4</b> Endpoints to be analysed</a></li>
+<li class="chapter" data-level="5.5" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#event-sub-type-column-and-set-up-optional."><i class="fa fa-check"></i><b>5.5</b> Event Sub-Type Column and Set up (optional).</a></li>
+<li class="chapter" data-level="5.6" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#grade-column-and-set-up-optional."><i class="fa fa-check"></i><b>5.6</b> Grade column and Set up (optional).</a></li>
+<li class="chapter" data-level="5.7" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#exposure-metrics"><i class="fa fa-check"></i><b>5.7</b> Exposure Metrics</a></li>
+<li class="chapter" data-level="5.8" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#categorical-covariates"><i class="fa fa-check"></i><b>5.8</b> Categorical Covariates</a></li>
+<li class="chapter" data-level="5.9" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#continuous-covariates"><i class="fa fa-check"></i><b>5.9</b> Continuous Covariates</a></li>
+<li class="chapter" data-level="5.10" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#reference-value-for-continuous-covariates"><i class="fa fa-check"></i><b>5.10</b> Reference Value for Continuous Covariates</a></li>
+<li class="chapter" data-level="5.11" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#other-options"><i class="fa fa-check"></i><b>5.11</b> Other Options</a>
+<ul>
+<li class="chapter" data-level="5.11.1" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#demographic-summary-by-variable"><i class="fa fa-check"></i><b>5.11.1</b> Demographic Summary-by Variable</a></li>
+<li class="chapter" data-level="5.11.2" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#additional-columns-to-include-in-modeling-dataset"><i class="fa fa-check"></i><b>5.11.2</b> Additional Columns to Include In Modeling Dataset</a></li>
+<li class="chapter" data-level="5.11.3" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#threshold-for-incidence-rate"><i class="fa fa-check"></i><b>5.11.3</b> Threshold(%) for Incidence Rate</a></li>
+<li class="chapter" data-level="5.11.4" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#exposure-metric-selection-criteria"><i class="fa fa-check"></i><b>5.11.4</b> Exposure Metric Selection Criteria</a></li>
+<li class="chapter" data-level="5.11.5" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#covariates-search"><i class="fa fa-check"></i><b>5.11.5</b> Covariates Search</a></li>
+<li class="chapter" data-level="5.11.6" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#backwards-deletion-criteria"><i class="fa fa-check"></i><b>5.11.6</b> Backwards Deletion Criteria</a></li>
+<li class="chapter" data-level="5.11.7" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#exposure-metrics-and-continuous-covariates-scales"><i class="fa fa-check"></i><b>5.11.7</b> Exposure Metrics and Continuous Covariates Scales</a></li>
+<li class="chapter" data-level="5.11.8" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#odds-ratio-results"><i class="fa fa-check"></i><b>5.11.8</b> Odds-Ratio Results</a></li>
+<li class="chapter" data-level="5.11.9" data-path="control-script-for-modeling-user-input.html"><a href="control-script-for-modeling-user-input.html#saved-table-format"><i class="fa fa-check"></i><b>5.11.9</b> Saved table format</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html"><i class="fa fa-check"></i><b>6</b> Prediction Control Script <code>prediction-user-input-sim.r</code></a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#bins-of-observed-exposure-values"><i class="fa fa-check"></i><b>6.1</b> Bins of Observed Exposure Values</a></li>
+<li class="chapter" data-level="6.2" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#simulated-exposure-data-set"><i class="fa fa-check"></i><b>6.2</b> Simulated Exposure Data Set</a></li>
+<li class="chapter" data-level="6.3" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#new-exposure-summary-metric"><i class="fa fa-check"></i><b>6.3</b> New Exposure Summary Metric</a></li>
+<li class="chapter" data-level="6.4" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#group-label-variable"><i class="fa fa-check"></i><b>6.4</b> Group Label Variable</a></li>
+<li class="chapter" data-level="6.5" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#filter-condition-optional"><i class="fa fa-check"></i><b>6.5</b> Filter Condition (Optional)</a></li>
+<li class="chapter" data-level="6.6" data-path="prediction-control-script-prediction-user-input-sim.html"><a href="prediction-control-script-prediction-user-input-sim.html#caption-for-simulated-exposure-data"><i class="fa fa-check"></i><b>6.6</b> Caption for Simulated Exposure Data</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html"><i class="fa fa-check"></i><b>7</b> Example Adjusting Output</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#demographic-summary-tables"><i class="fa fa-check"></i><b>7.1</b> Demographic Summary Tables</a></li>
+<li class="chapter" data-level="7.2" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#use-different-exposure-metrics-in-different-endpoints"><i class="fa fa-check"></i><b>7.2</b> Use different Exposure Metrics in different Endpoints</a></li>
+<li class="chapter" data-level="7.3" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#threshold-for-incidence-rate-1"><i class="fa fa-check"></i><b>7.3</b> Threshold(%) for Incidence Rate</a></li>
+<li class="chapter" data-level="7.4" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#exposure-and-model-selection-criteria"><i class="fa fa-check"></i><b>7.4</b> Exposure and Model Selection Criteria</a></li>
+<li class="chapter" data-level="7.5" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#scale-of-exposure-metrics"><i class="fa fa-check"></i><b>7.5</b> Scale of Exposure Metrics</a></li>
+<li class="chapter" data-level="7.6" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#covariates-search-1"><i class="fa fa-check"></i><b>7.6</b> Covariates Search</a></li>
+<li class="chapter" data-level="7.7" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#summary-only-covariates"><i class="fa fa-check"></i><b>7.7</b> Summary-only Covariates</a></li>
+<li class="chapter" data-level="7.8" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#reference-value-for-continuous-covariates-1"><i class="fa fa-check"></i><b>7.8</b> Reference value for Continuous Covariates</a></li>
+<li class="chapter" data-level="7.9" data-path="example-adjusting-output.html"><a href="example-adjusting-output.html#save-all-tables-as-.tsv-files-instead-of-.tex-files"><i class="fa fa-check"></i><b>7.9</b> Save all tables as .tsv files instead of .tex files</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="acknowledgements.html"><a href="acknowledgements.html"><i class="fa fa-check"></i><b>8</b> Acknowledgements</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="prediction-control-script-prediction-user-input-sim.r" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">Chapter 6</span> Prediction Control Script <code>prediction-user-input-sim.r</code><a href="prediction-control-script-prediction-user-input-sim.html#prediction-control-script-prediction-user-input-sim.r" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This section explains how to write a <code>prediction-user-input-sim.r</code> control file for predicting the incidence rate using new simulated exposures. The examples showing below can be used as a template by combining all chunks in order(user needs to update the column names and options accordingly).</p>
+<p>The control script require package <code>tidyverse</code>.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="prediction-control-script-prediction-user-input-sim.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<div id="bins-of-observed-exposure-values" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Bins of Observed Exposure Values<a href="prediction-control-script-prediction-user-input-sim.html#bins-of-observed-exposure-values" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The observed exposure values will be grouped into bins to calculate the observed incidence rates and they are compared to the model prediction. If <code>bin_n_obs</code> is missing, the observed exposures will be grouped into 5 bins by default.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="prediction-control-script-prediction-user-input-sim.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">#number of bins for grouping exposure values of observations (the data used in modeling)</span></span>
+<span id="cb35-2"><a href="prediction-control-script-prediction-user-input-sim.html#cb35-2" aria-hidden="true" tabindex="-1"></a>bin_n_obs <span class="ot">&lt;-</span> <span class="dv">7</span> <span class="co">#Default value is 5</span></span></code></pre></div>
+</div>
+<div id="simulated-exposure-data-set" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Simulated Exposure Data Set<a href="prediction-control-script-prediction-user-input-sim.html#simulated-exposure-data-set" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><code>sim_inc_expo_data</code> is the file name of the new exposure data set. It must under the same folder as all other modeling results.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="prediction-control-script-prediction-user-input-sim.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Provide the new data set for prediction</span></span>
+<span id="cb36-2"><a href="prediction-control-script-prediction-user-input-sim.html#cb36-2" aria-hidden="true" tabindex="-1"></a>sim_inc_expo_data <span class="ot">&lt;-</span> <span class="st">&quot;simdata.csv&quot;</span> </span></code></pre></div>
+<p><code>Obs_Expo_list</code> is the exposure metric (original scale) column names in obsdata.csv, and <code>Sim_Expo_list</code> is the corresponding names in simdata.csv. In many circumstances, the same exposure metric might have different column names in different data set.</p>
+<p>If <code>Obs_Expo_list</code> is missing, it will be set as all exposure metric column values occurred in obsdata.csv.</p>
+<p>If <code>Sim_Expo_list</code> is missing, it will be set as the same value as <code>Obs_Expo_list</code></p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="prediction-control-script-prediction-user-input-sim.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Selected Exposure Metric(s) column(s) in Obs Data (not sim data) shown on prediction plot</span></span>
+<span id="cb37-2"><a href="prediction-control-script-prediction-user-input-sim.html#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co">#If Obs_Expo_list is missing, Obs_Expo_list = names(orig.exposureCov) which was saved in the modeling result</span></span>
+<span id="cb37-3"><a href="prediction-control-script-prediction-user-input-sim.html#cb37-3" aria-hidden="true" tabindex="-1"></a>Obs_Expo_list <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;CAVE1&quot;</span>, <span class="st">&quot;CAVE2&quot;</span>)</span>
+<span id="cb37-4"><a href="prediction-control-script-prediction-user-input-sim.html#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="prediction-control-script-prediction-user-input-sim.html#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Metric column(s) in simulation data to be used as Exposure(s) on plot</span></span>
+<span id="cb37-6"><a href="prediction-control-script-prediction-user-input-sim.html#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co">#the order needs to be consistent with Obs_Expo_list</span></span>
+<span id="cb37-7"><a href="prediction-control-script-prediction-user-input-sim.html#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="co">#If Sim_Expo_list is missing, Sim_Expo_list =  Obs_Expo_list </span></span>
+<span id="cb37-8"><a href="prediction-control-script-prediction-user-input-sim.html#cb37-8" aria-hidden="true" tabindex="-1"></a>Sim_Expo_list <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;CAVE1&quot;</span>, <span class="st">&quot;CAVE2&quot;</span>)</span></code></pre></div>
+</div>
+<div id="new-exposure-summary-metric" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> New Exposure Summary Metric<a href="prediction-control-script-prediction-user-input-sim.html#new-exposure-summary-metric" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The center of exposures in each group can be calculated as the geometric mean:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="prediction-control-script-prediction-user-input-sim.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Statistic of Exposure used to calculate fitted value.</span></span>
+<span id="cb38-2"><a href="prediction-control-script-prediction-user-input-sim.html#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&quot;median&quot;, &quot;geomean&quot;;</span></span>
+<span id="cb38-3"><a href="prediction-control-script-prediction-user-input-sim.html#cb38-3" aria-hidden="true" tabindex="-1"></a>Center_Metric <span class="ot">&lt;-</span> <span class="st">&quot;geomean&quot;</span> <span class="co">#Default value &quot;geomean&quot;</span></span>
+<span id="cb38-4"><a href="prediction-control-script-prediction-user-input-sim.html#cb38-4" aria-hidden="true" tabindex="-1"></a>Center_Metric_name <span class="ot">&lt;-</span> <span class="st">&quot;geometric mean&quot;</span></span></code></pre></div>
+<p>It could also be calculated as the median:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="prediction-control-script-prediction-user-input-sim.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Statistic of Exposure used to calculate fitted value.</span></span>
+<span id="cb39-2"><a href="prediction-control-script-prediction-user-input-sim.html#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&quot;median&quot;, &quot;geomean&quot;;</span></span>
+<span id="cb39-3"><a href="prediction-control-script-prediction-user-input-sim.html#cb39-3" aria-hidden="true" tabindex="-1"></a>Center_Metric <span class="ot">&lt;-</span> <span class="st">&quot;median&quot;</span> <span class="co">#Default value &quot;geomean&quot;</span></span>
+<span id="cb39-4"><a href="prediction-control-script-prediction-user-input-sim.html#cb39-4" aria-hidden="true" tabindex="-1"></a>Center_Metric_name <span class="ot">&lt;-</span> <span class="st">&quot;Median&quot;</span></span></code></pre></div>
+<p>If <code>Center_Metric</code> is missing, the default value is “geomean.” If <code>Center_Metric_name</code> is missing, the metric name will be “geometric mean” or “median” based on <code>Center_Metric</code>.</p>
+</div>
+<div id="group-label-variable" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> Group Label Variable<a href="prediction-control-script-prediction-user-input-sim.html#group-label-variable" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><code>grp_colname</code> is the variable to summary and display exposure values by. <code>grp_colname_tab</code> is the name to display in tables.
+If <code>grp_colname</code> is missing, the exposure values will be summarized and displayed as one group; if <code>grp_colname_tab</code> is missing, the default value is “Label.”</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="prediction-control-script-prediction-user-input-sim.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Group Label column name</span></span>
+<span id="cb40-2"><a href="prediction-control-script-prediction-user-input-sim.html#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="prediction-control-script-prediction-user-input-sim.html#cb40-3" aria-hidden="true" tabindex="-1"></a>grp_colname <span class="ot">&lt;-</span> <span class="st">&quot;GROUP&quot;</span> <span class="co">#column name in simdata.csv</span></span>
+<span id="cb40-4"><a href="prediction-control-script-prediction-user-input-sim.html#cb40-4" aria-hidden="true" tabindex="-1"></a>grp_colname_tab <span class="ot">&lt;-</span> <span class="st">&quot;Treatment&quot;</span> <span class="co">#name to display in tables</span></span></code></pre></div>
+<p><code>levels.grp</code> and <code>labels.grp</code> are the levels information for the group variable.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="prediction-control-script-prediction-user-input-sim.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">#provide levels in Group Label column</span></span>
+<span id="cb41-2"><a href="prediction-control-script-prediction-user-input-sim.html#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="co">#if levels.grp is missing, a vector of the unique values in grp_colname will be levels.grp</span></span>
+<span id="cb41-3"><a href="prediction-control-script-prediction-user-input-sim.html#cb41-3" aria-hidden="true" tabindex="-1"></a>levels.grp <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;10 mg QD&quot;</span>, </span>
+<span id="cb41-4"><a href="prediction-control-script-prediction-user-input-sim.html#cb41-4" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;30 mg QD&quot;</span>, </span>
+<span id="cb41-5"><a href="prediction-control-script-prediction-user-input-sim.html#cb41-5" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;50 mg QD&quot;</span>, </span>
+<span id="cb41-6"><a href="prediction-control-script-prediction-user-input-sim.html#cb41-6" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;100 mg QD&quot;</span>) </span>
+<span id="cb41-7"><a href="prediction-control-script-prediction-user-input-sim.html#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="co">#provide labels of each level in Group Label column</span></span>
+<span id="cb41-8"><a href="prediction-control-script-prediction-user-input-sim.html#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="co">#if labels.grp is missing, labels.grp = levels.grp</span></span>
+<span id="cb41-9"><a href="prediction-control-script-prediction-user-input-sim.html#cb41-9" aria-hidden="true" tabindex="-1"></a>labels.grp <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;10 mg once daily&quot;</span>, </span>
+<span id="cb41-10"><a href="prediction-control-script-prediction-user-input-sim.html#cb41-10" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;30 mg once daily&quot;</span>, </span>
+<span id="cb41-11"><a href="prediction-control-script-prediction-user-input-sim.html#cb41-11" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;50 mg once daily&quot;</span>, </span>
+<span id="cb41-12"><a href="prediction-control-script-prediction-user-input-sim.html#cb41-12" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;100 mg once daily&quot;</span>) </span></code></pre></div>
+</div>
+<div id="filter-condition-optional" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> Filter Condition (Optional)<a href="prediction-control-script-prediction-user-input-sim.html#filter-condition-optional" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>It is possible to use a subset of simdata.csv without modifying the data file.</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="prediction-control-script-prediction-user-input-sim.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Only include partial exposure records</span></span>
+<span id="cb42-2"><a href="prediction-control-script-prediction-user-input-sim.html#cb42-2" aria-hidden="true" tabindex="-1"></a>filter_condition <span class="ot">&lt;-</span> <span class="st">&quot;GROUP != &#39;10 mg QD&#39;&quot;</span> <span class="co">#remove 10 mg QD group</span></span>
+<span id="cb42-3"><a href="prediction-control-script-prediction-user-input-sim.html#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="prediction-control-script-prediction-user-input-sim.html#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co">#In the example simdata.csv, only 100 mg QD has C = 1</span></span>
+<span id="cb42-5"><a href="prediction-control-script-prediction-user-input-sim.html#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="co">#filter_condition &lt;- &quot;C == 1&quot; # only keep 100 mg QD group</span></span>
+<span id="cb42-6"><a href="prediction-control-script-prediction-user-input-sim.html#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="co">#filter_condition &lt;- &quot;GROUP == &#39;100 mg QD&#39;&quot;</span></span></code></pre></div>
+<p><code>filter_condition</code> can be missing if all exposure values will be used.</p>
+</div>
+<div id="caption-for-simulated-exposure-data" class="section level2 hasAnchor" number="6.6">
+<h2><span class="header-section-number">6.6</span> Caption for Simulated Exposure Data<a href="prediction-control-script-prediction-user-input-sim.html#caption-for-simulated-exposure-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Add information for the simulated exposure data. If <code>expo_pred_tab_caption</code> is missing, the standard description will be used: “Predicted exposure metric for each dose are derived from simulated patients with randomly drawn random effect parameters as described by the final population PK model and body weights sampled from observations.”</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="prediction-control-script-prediction-user-input-sim.html#cb43-1" aria-hidden="true" tabindex="-1"></a>expo_pred_tab_caption <span class="ot">&lt;-</span> <span class="st">&quot;Predicted exposure metric values for each dose are derived from 2,500 simulated subjects.&quot;</span></span></code></pre></div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="control-script-for-modeling-user-input.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="example-adjusting-output.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/index.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
