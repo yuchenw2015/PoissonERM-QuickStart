@@ -12,8 +12,9 @@ To use this tool, you will need:
   - A control script (user input) and a data set to fit the model(s).
   - A control script (prediction input) and a simulated/external exposure data set to create additional predicted incidence rates. This is optional.
 
+The Quick-Start tutorial is here: https://yuchenw2015.github.io/PoissonERM-QuickStart
 The Examples of `PoissonERM` is here: https://github.com/yuchenw2015/PoissonERM-Example
 
-The full method section is here: https://yuchenw2015.github.io/PoissonERM
+A full method section is here: https://yuchenw2015.github.io/PoissonERM
 
 Now start with the command.R to play with the examples!
