@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression</title>
-  <meta name="description" content="Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression" />
+  <title>Chapter 8 Tips for Users | Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression</title>
+  <meta name="description" content="Chapter 8 Tips for Users | Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression" />
   <meta name="generator" content="bookdown 0.36 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression" />
+  <meta property="og:title" content="Chapter 8 Tips for Users | Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression" />
+  <meta name="twitter:title" content="Chapter 8 Tips for Users | Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression" />
   
   
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="quick-start-with-an-example.html"/>
+<link rel="prev" href="example-adjusting-output.html"/>
+<link rel="next" href="acknowledgements.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -222,37 +222,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Start with PoissonERM: Automate the Binary-Endpoint ER model via Poisson Regression</h1>
-<p class="author"><em>Yuchen Wang, Ph.D., Pfizer Inc</em></p>
-<p class="author"><em>Luke Fostvedt, Ph.D., Pfizer Inc</em></p>
-<p class="date"><em>2023-11-10</em></p>
-</div>
-<div id="introduction" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Introduction<a href="index.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>PoissonERM is a tool that was developed as an automation tool for Poisson Regression of binary events (eg occurrence of AEs) for internal use at Pfizer Inc. It implements a full statistical analysis using Poisson Regression on endpoint(s) specified by the user. There is also the ability to predict the incidence rate using user provided simulated exposures (usually from a separate population PK model). <code>PoissonERM</code> is the package version of this tool, which can generate an R Markdown report summary that includes all the components typically included in a formal report.</p>
-<p>Poisson regression of binary outcome data utilizes the features of the exponential family of distributions. For the purposes of the analysis that is performed with this package, there are two aspect to highlight.</p>
+<div id="tips-for-users" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number">Chapter 8</span> Tips for Users<a href="tips-for-users.html#tips-for-users" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p><code>PoissonERM</code> was firstly designed as an internal tool and is developed into a package-like version for external use. Although there are 3 main functions for completing the analysis, there are hundreds of functions behind them and none of them is supposed to be used by user directly. On the other hand, <code>ModelPoisson()</code> and <code>PredictionPoisson()</code> return values to the global environment and the modeling results are saved by saving the global environment into an RData object. Unlike most of the R packages, <code>PoissonERM</code> uses the global environment as a painting canvas to conduct most of the operations.</p>
+<p>Below is several suggestions for users to avoid errors while using <code>PoissonERM</code></p>
 <ul>
-<li>the link function for Poisson regression is log() instead of logit;</li>
-<li>Poisson regression can incorporate time to model the incidence rate.</li>
+<li>Make sure the control script is error-free by running the options row by row.</li>
+<li>Always clean the global environment via rm(list = ls(all = TRUE)) before running <code>ModelPoisson()</code>. This function sources information from the control script, so it will be affected by anything that was not provided in control script but remains in the global environment from the previous run.</li>
+<li>Similarly, remember to clean the global environment before running <code>PredictionPoisson()</code> if the last operation is not <code>ModelPoisson()</code>. <code>PredictionPoisson()</code> sources information from the control script and loads essential modeling results from the saved RData.</li>
+<li>The modeling results and the results with additional prediction can be saved into two different RData files. However, while running <code>ReportPoisson()</code> with the modeling results from <code>ModelPoisson()</code>, make sure there is no “Prediction” folder under each endpoint’s folder. It is recommended to re-run the <code>ModelPoisson()</code> to clean the folders if the prediction results are not needed.</li>
+<li>One project, one folder. The data sets and the control scripts are stored in the same directory as all analysis results. Using one folder for multiple projects may bring confusions.</li>
+<li>The directory path must be an absolute path. After running <code>ModelPoisson()</code>, the working directory will be the provided <code>pathRunType</code>. If <code>pathRunType</code> was a relative path, it will not work in <code>PredictionPoisson()</code>. It is recommended to always use an absolute path, or always use <code>pathRunType = getwd()</code> (also the default value of <code>pathRunType</code>) in <code>PredictionPoisson()</code> or <code>ReportPoisson()</code> after running <code>ModelPoisson()</code>.</li>
 </ul>
-<p>This tutorial is a document of the methods implemented in <code>PoissonERM</code> and the instruction for users.</p>
-<p><strong>Section 2 Quick Start With the Example</strong> is for users to start with provided example folders (<a href="https://github.com/yuchenw2015/PoissonERM-Example" class="uri">https://github.com/yuchenw2015/PoissonERM-Example</a>). It shows how to run functions in <code>PoissonERM</code> when the control scripts and data sets are ready. Section 7 provides ideas for users to explore the different options in the example control script.</p>
-<p><strong>Section 3 Usage</strong> introduces the basic uses of 3 functions in <code>PoissonERM</code>.</p>
-<p><strong>Section 4 Data Preparation</strong> shows the data structure of the modeling data set and of the new simulated exposure data set.</p>
-<p><strong>Section 5</strong> and <strong>Section 6</strong> are detailed explanations of the two control scripts.</p>
-<p>Ideally, user should prepare the data sets and the control scripts before running functions in <code>PoissonERM</code>.</p>
-<p>To install the package, go to <a href="https://github.com/yuchenw2015/PoissonERM" class="uri">https://github.com/yuchenw2015/PoissonERM</a>.</p>
-<p>The full section of the analysis method can be found here: <a href="https://yuchenw2015.github.io/PoissonERM" class="uri">https://yuchenw2015.github.io/PoissonERM</a>.</p>
-<p>The examples mentioned in this tutorial are here: <a href="https://github.com/yuchenw2015/PoissonERM-Example" class="uri">https://github.com/yuchenw2015/PoissonERM-Example</a>.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="quick-start-with-an-example.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="example-adjusting-output.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="acknowledgements.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
