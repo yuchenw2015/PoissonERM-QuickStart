@@ -78,7 +78,7 @@ The folders "Example1" (with prediction) and "Example2" (no prediction) contain 
 ```{r eval=FALSE,include=TRUE}
 library(PoissonERM)
 rm(list = ls(all = TRUE))
-folder.dir1 <- "PoissonERM/Example1/" #change the path accordingly
+folder.dir1 <- "PoissonERM-Example/Example1/" #change the path accordingly
 ModelPoisson(pathRunType = folder.dir1,
              user.input = "user-input.r")
 
@@ -92,7 +92,7 @@ ReportPoisson(pathRunType = getwd(),
 
 
 rm(list = ls(all = TRUE))
-folder.dir2 <- "PoissonERM/Example2/" #change the path accordingly
+folder.dir2 <- "PoissonERM-Example/Example2/" #change the path accordingly
 ModelPoisson(pathRunType = folder.dir2,
              user.input = "user-input.r")
 
