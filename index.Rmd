@@ -610,7 +610,7 @@ Final model is obtained via backwards deletion with the significant level specif
  exclude.exp.met.bd <- "Yes" #Default value "Yes"
 ```
 
-If `p_val_b` and `exclude.exp.met.bd`, backwards deletion will be conducted at significant level 0.01 by default and the selected exposure metric (if any) will not be removed by default.
+If `p_val_b` and `exclude.exp.met.bd`, backwards deletion will be conducted at significant level 0.01 by default and the selected exposure metric (if any) will not be removed by default. `p_val_b` needs to be no lower than 0.0001. 
 
 ### Exposure Metrics and Continuous Covariates Scales
 If user chooses to consider scale transformation for exposure metrics or for continuous covariates, the transformed scales of variables (if any) will be compared with the original scales and only one scale of each variable could be included in the data set.

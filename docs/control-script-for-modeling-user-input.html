@@ -24,7 +24,7 @@
 <meta name="author" content="Luke Fostvedt, Ph.D., Pfizer Inc" />
 
 
-<meta name="date" content="2023-11-13" />
+<meta name="date" content="2024-03-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -524,7 +524,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb30-2"><a href="control-script-for-modeling-user-input.html#cb30-2" aria-hidden="true" tabindex="-1"></a> p_val_b <span class="ot">&lt;-</span> <span class="fl">0.01</span> <span class="co">#Default significant level 0.01</span></span>
 <span id="cb30-3"><a href="control-script-for-modeling-user-input.html#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Exposure Metric will be in the final model regardless of the significant level. </span></span>
 <span id="cb30-4"><a href="control-script-for-modeling-user-input.html#cb30-4" aria-hidden="true" tabindex="-1"></a> exclude.exp.met.bd <span class="ot">&lt;-</span> <span class="st">&quot;Yes&quot;</span> <span class="co">#Default value &quot;Yes&quot;</span></span></code></pre></div>
-<p>If <code>p_val_b</code> and <code>exclude.exp.met.bd</code>, backwards deletion will be conducted at significant level 0.01 by default and the selected exposure metric (if any) will not be removed by default.</p>
+<p>If <code>p_val_b</code> and <code>exclude.exp.met.bd</code>, backwards deletion will be conducted at significant level 0.01 by default and the selected exposure metric (if any) will not be removed by default. <code>p_val_b</code> needs to be no lower than 0.0001.</p>
 </div>
 <div id="exposure-metrics-and-continuous-covariates-scales" class="section level3 hasAnchor" number="5.11.7">
 <h3><span class="header-section-number">5.11.7</span> Exposure Metrics and Continuous Covariates Scales<a href="control-script-for-modeling-user-input.html#exposure-metrics-and-continuous-covariates-scales" class="anchor-section" aria-label="Anchor link to header"></a></h3>
