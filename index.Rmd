@@ -101,12 +101,12 @@ ReportPoisson(pathRunType = getwd(),
               file.name = "Report_no_pred.Rmd")
 ```
 
-Running this script will perform the complete statistical analysis and generate an .Rmd report (which is ready to knit) with all the details, results, simulations, and conclusions for each example.
+Running this script will perform the complete statistical analysis and generate an .Rmd report (which is ready to knit) with all the details, results, predictions, and conclusions for each example.
 
 
 # Usage 
 
-The complete statistical modeling, including data checks, data imputation, covariate screening, model selection, simulations and model summaries are all wrapped into the `ModelPoisson()` function. Only a control script and dataset are required. All of the output from the modeling is saved into summary folders and endpoint specific folders.
+The complete statistical modeling, including data checks, data imputation, covariate screening, model selection, predictions and model summaries are all wrapped into the `ModelPoisson()` function. Only a control script and dataset are required. All of the output from the modeling is saved into summary folders and endpoint specific folders.
 
 
 ## Statistical Analysis: `ModelPoisson()`
@@ -173,7 +173,7 @@ PredictionPoisson(pathRunType = folder.dir,
 ```{r eval=FALSE, include=TRUE}
 folder.dir <- getwd()
 source("prediction-user-input-sim.R")
-ModelPoisson(pathRunType = folder.dir,
+PredictionPoisson(pathRunType = folder.dir,
              prediction.input = NULL,
              model.RData = "myEnvironment.RData",
              save.name = "myEnvironment_new.RData")
